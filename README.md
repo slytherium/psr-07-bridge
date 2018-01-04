@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Use [PSR-07](http://www.php-fig.org/psr/psr-7) packages to [Zapheus](https://github.com/zapheus/zapheus).
+Enables the use [PSR-07](http://www.php-fig.org/psr/psr-7) packages to [Zapheus](https://github.com/zapheus/zapheus).
 
 ## Install
 
@@ -19,7 +19,14 @@ $ composer require zapheus/psr-07-bridge
 
 ## Usage
 
-Coming soon.
+``` php
+use Zapheus\Bridge\Psr\ServerRequest;
+use Zend\Diactoros\ServerRequestFactory;
+
+$psr = ServerRequestFactory::fromGlobals();
+
+$request = new ServerRequest($psr);
+```
 
 ## Change log
 

@@ -1,7 +1,7 @@
 {
     "name": "zapheus/psr-07-bridge",
-    "description": "PSR-07 Bridge For Zapheus",
-    "keywords": ["php framework", "php library", "zapheus"],
+    "description": "Use PSR-07 packages for Zapheus",
+    "keywords": ["http-message", "psr-7", "zapheus"],
     "homepage": "https://github.com/zapheus/psr-07-bridge",
     "license": "MIT",
     "authors": [

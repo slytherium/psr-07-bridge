@@ -1,8 +1,6 @@
 <?php
 
-namespace Zapheus\Bridge\Psr07;
-
-use Zend\Diactoros\Uri as ZendUri;
+namespace Zapheus\Bridge\Psr;
 
 /**
  * Uri Test
@@ -31,7 +29,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
     {
         $url = 'https://me@rougin.github.io:400/about#test';
 
-        $psr = new ZendUri($url);
+        $psr = new \Zend\Diactoros\Uri($url);
 
         $this->uri = new Uri($this->psr = $psr);
     }

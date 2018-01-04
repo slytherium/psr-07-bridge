@@ -1,6 +1,6 @@
 <?php
 
-namespace Zapheus\Bridge\Psr07;
+namespace Zapheus\Bridge\Psr;
 
 use Zapheus\Http\Message\UploadedFile;
 use Zapheus\Http\Message\Uri;

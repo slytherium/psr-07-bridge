@@ -1,6 +1,6 @@
 <?php
 
-namespace Zapheus\Bridge\Psr07;
+namespace Zapheus\Bridge\Psr;
 
 use Psr\Http\Message\ServerRequestInterface;
 
