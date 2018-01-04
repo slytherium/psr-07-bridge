@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Enables the use of [PSR-07](http://www.php-fig.org/psr/psr-7) packages to [Zapheus](https://github.com/zapheus/zapheus).
+Use [PSR-07](http://www.php-fig.org/psr/psr-7) packages to [Zapheus](https://github.com/zapheus/zapheus).
 
 ## Install
 
