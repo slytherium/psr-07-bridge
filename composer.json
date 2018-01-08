@@ -1,6 +1,6 @@
 {
     "name": "zapheus/psr-07-bridge",
-    "description": "Converts PSR-07 message to Zapheus HTTP and vice versa.",
+    "description": "Converts PSR-7 to Zapheus HTTP and vice versa.",
     "keywords": ["http-message", "psr-7", "zapheus"],
     "homepage": "https://github.com/zapheus/psr-07-bridge",
     "license": "MIT",
