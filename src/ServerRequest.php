@@ -2,79 +2,345 @@
 
 namespace Zapheus\Bridge\Psr;
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
- * PSR-07 to Zapheus Server Request Bridge
+ * Server Request
  *
  * @package Zapheus
+ * @author  Kévin Dunglas <dunglas@gmail.com>
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class ServerRequest extends \Zapheus\Http\Message\ServerRequest
+class ServerRequest extends Request implements ServerRequestInterface
 {
+    /**
+     * @var array
+     */
+    protected $server = array();
+
+    /**
+     * @var array
+     */
+    protected $cookies = array();
+
+    /**
+     * @var array
+     */
+    protected $query = array();
+
+    /**
+     * @var array
+     */
+    protected $uploaded = array();
+
+    /**
+     * @var array|null|object
+     */
+    protected $data;
+
+    /**
+     * @var array
+     */
+    protected $attributes = array();
+
     /**
      * Initializes the server request instance.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param array                                  $server
+     * @param array                                  $cookies
+     * @param array                                  $query
+     * @param array                                  $uploaded
+     * @param array|null                             $data
+     * @param array                                  $attributes
+     * @param \Psr\Http\Message\UriInterface|null    $uri
+     * @param \Psr\Http\Message\StreamInterface|null $body
+     * @param array                                  $headers
+     * @param string                                 $version
      */
-    public function __construct(ServerRequestInterface $request)
+    public function __construct(array $server, array $cookies = array(), array $query = array(), array $uploaded = array(), $data = null, array $attributes = array(), UriInterface $uri = null, StreamInterface $body = null, array $headers = array(), $version = '1.1')
     {
-        $server = $request->getServerParams();
+        $uri = $this->uri($server, $uri);
 
-        $cookies = $request->getCookieParams();
+        parent::__construct($server['REQUEST_METHOD'], $server['REQUEST_URI'], $uri, $body, $headers, $version);
 
-        list($query, $files) = $this->globals($request);
+        $this->cookies = $cookies;
 
-        $data = $request->getParsedBody();
+        $this->data = $data;
 
-        $attributes = $request->getAttributes();
+        $this->query = $query;
 
-        list($uri, $body) = $this->request($request);
+        $this->server = $server;
 
-        $headers = $request->getHeaders();
-
-        $version = $request->getProtocolVersion();
-
-        parent::__construct($server, $cookies, $query, $files, $data, $attributes, $uri, $body, $headers, $version);
+        $this->uploaded = $this->files($uploaded);
     }
 
     /**
-     * Returns a listing of globals.
+     * Retrieves a single derived request attribute.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
+     * @param  string $name
+     * @param  mixed  $default
+     * @return mixed
+     */
+    public function getAttribute($name, $default = null)
+    {
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
+    }
+
+    /**
+     * Retrieve attributes derived from the request.
+     *
      * @return array
      */
-    protected function globals(ServerRequestInterface $request)
+    public function getAttributes()
     {
-        $uploaded = array();
+        return $this->attributes;
+    }
 
-        $items = $request->getUploadedFiles();
+    /**
+     * Retrieve cookies.
+     *
+     * @return array
+     */
+    public function getCookieParams()
+    {
+        return $this->cookies;
+    }
 
-        $query = $request->getQueryParams();
+    /**
+     * Retrieve any parameters provided in the request body.
+     *
+     * @return null|array|object
+     */
+    public function getParsedBody()
+    {
+        return $this->data;
+    }
 
-        foreach ((array) $items as $key => $files) {
-            $uploaded[$key] = array();
+    /**
+     * Retrieve query string arguments.
+     *
+     * @return array
+     */
+    public function getQueryParams()
+    {
+        return $this->query;
+    }
 
-            foreach ((array) $files as $file) {
-                $item = new UploadedFile($file);
-                
-                array_push($uploaded[$key], $item);
-            }
+    /**
+     * Retrieve server parameters.
+     *
+     * @return array
+     */
+    public function getServerParams()
+    {
+        return $this->server;
+    }
+
+    /**
+     * Retrieve normalized file upload data.
+     *
+     * @return \Psr\Http\Message\UploadedFileInterface[]
+     */
+    public function getUploadedFiles()
+    {
+        return $this->uploaded;
+    }
+
+    /**
+     * Returns an instance with the specified derived request attribute.
+     *
+     * @param  string $name
+     * @param  mixed  $value
+     * @return static
+     */
+    public function withAttribute($name, $value)
+    {
+        $new = clone $this;
+
+        $new->attributes[$name] = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns an instance with the specified cookies.
+     *
+     * @param  array $cookies
+     * @return static
+     */
+    public function withCookieParams(array $cookies)
+    {
+        $new = clone $this;
+
+        $new->cookies = $cookies;
+
+        return $new;
+    }
+
+    /**
+     * Returns an instance with the specified body parameters.
+     *
+     * @param  null|array|object $data
+     * @return static
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function withParsedBody($data)
+    {
+        $new = clone $this;
+
+        $new->data = $data;
+
+        return $new;
+    }
+
+    /**
+     * Returns an instance with the specified query string arguments.
+     *
+     * @param  array $query
+     * @return static
+     */
+    public function withQueryParams(array $query)
+    {
+        $new = clone $this;
+
+        $new->query = $query;
+
+        return $new;
+    }
+
+    /**
+     * Create a new instance with the specified uploaded files.
+     *
+     * @param  \Psr\Http\Message\UploadedFileInterface[] $uploaded
+     * @return static
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function withUploadedFiles(array $uploaded)
+    {
+        $new = clone $this;
+
+        $new->uploaded = $uploaded;
+
+        return $new;
+    }
+
+    /**
+     * Returns an instance that removes the specified derived request attribute.
+     *
+     * @param  string $name
+     * @return static
+     */
+    public function withoutAttribute($name)
+    {
+        $new = clone $this;
+
+        unset($new->attributes[$name]);
+
+        return $new;
+    }
+
+    /**
+     * Converts each value as array.
+     *
+     * @param  array $item
+     * @return array
+     */
+    protected function arrayify(array $item)
+    {
+        $array = array();
+
+        foreach ($item as $key => $value) {
+            $new = (array) array($value);
+
+            isset($item['name']) && $value = $new;
+
+            $array[$key] = $value;
         }
-   
-        return array($query, $uploaded);
+
+        return $array;
     }
 
     /**
-     * Returns a listing of request variables.
+     * Converts the data from $_FILES to multiple \UploadInterface instances.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
+     * @param  array $file
+     * @param  array $current
      * @return array
      */
-    protected function request(ServerRequestInterface $request)
+    protected function convert($file, $current)
     {
-        $uri = new Uri($request->getUri());
+        list($count, $items) = array(count($file['name']), array());
 
-        return array($uri, new Stream($request->getBody()));
+        for ($i = 0; $i < (integer) $count; $i++) {
+            foreach (array_keys($current) as $key) {
+                $file[$i][$key] = $current[$key][$i];
+            }
+
+            $error = $file[$i]['error'];
+            $original = $file[$i]['name'];
+            $size = $file[$i]['size'];
+            $tmp = $file[$i]['tmp_name'];
+            $type = $file[$i]['type'];
+
+            $items[$i] = new UploadedFile($tmp, $size, $error, $original, $type);
+        }
+
+        return $items;
+    }
+
+    /**
+     * Parses the $_FILES into multiple \UploadedFileInterface instances.
+     *
+     * @param  array $uploaded
+     * @param  array $files
+     * @return \Psr\Http\Message\UploadedFileInterface[]
+     */
+    protected function files(array $uploaded, $files = array())
+    {
+        foreach ((array) $uploaded as $name => $file) {
+            $array = $this->arrayify($file);
+
+            $files[$name] = array();
+
+            isset($file[0]) || $file = $this->convert($file, $array);
+
+            $files[$name] = $file;
+        }
+
+        return $files;
+    }
+
+    /**
+     * Generates a \Psr\Http\Message\UriInterface if it does not exists.
+     *
+     * @param  array                               $server
+     * @param  \Psr\Http\Message\UriInterface|null $uri
+     * @return \Psr\Http\Message\UriInterface
+     */
+    protected function uri(array $server, $uri = null)
+    {
+        $secure = isset($server['HTTPS']) ? $server['HTTPS'] : 'off';
+
+        $http = $secure === 'off' ? 'http' : 'https';
+
+        $url = $http . '://' . $server['SERVER_NAME'];
+
+        $url .= $server['SERVER_PORT'] . $server['REQUEST_URI'];
+
+        return $uri === null ? new Uri($url) : $uri;
     }
 }

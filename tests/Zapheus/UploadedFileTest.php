@@ -1,13 +1,13 @@
 <?php
 
-namespace Zapheus\Bridge\Psr;
+namespace Zapheus\Bridge\Psr\Zapheus;
 
-use Zend\Diactoros\UploadedFile as ZendFile;
+use Zapheus\Bridge\Psr\UploadedFile as PsrUploadedFile;
 
 /**
  * Uploaded File Test
  *
- * @package Slytherin
+ * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
 class UploadedFileTest extends \PHPUnit_Framework_TestCase
@@ -138,7 +138,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 
         $type = mime_content_type($file);
 
-        $psr = new ZendFile($file, $size, UPLOAD_ERR_OK, $name, $type);
+        $psr = new PsrUploadedFile($file, $size, UPLOAD_ERR_OK, $name, $type);
 
         return new UploadedFile($psr);
     }

@@ -2,81 +2,123 @@
 
 namespace Zapheus\Bridge\Psr;
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Psr\Http\Message\UploadedFileInterface;
 
 /**
- * PSR-07 to Zapheus Uploaded File Bridge
+ * Uploaded File
  *
  * @package Zapheus
+ * @author  Kévin Dunglas <dunglas@gmail.com>
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class UploadedFile implements \Zapheus\Http\Message\UploadedFileInterface
+class UploadedFile implements UploadedFileInterface
 {
     /**
-     * @var \Psr\Http\Message\UploadedFileInterface
+     * @var string
      */
     protected $file;
 
     /**
+     * @var integer|null
+     */
+    protected $size;
+
+    /**
+     * @var integer|UPLOAD_ERR_OK
+     */
+    protected $error;
+
+    /**
+     * @var string
+     */
+    protected $name;
+
+    /**
+     * @var string
+     */
+    protected $media;
+
+    /**
      * Initializes the uploaded file instance.
      *
-     * @param \Psr\Http\Message\UploadedFileInterface $file
+     * @param string       $file
+     * @param integer|null $size
+     * @param integer      $error
+     * @param string|null  $name
+     * @param string|null  $media
      */
-    public function __construct(UploadedFileInterface $file)
+    public function __construct($file, $size = null, $error = UPLOAD_ERR_OK, $name = null, $media = null)
     {
+        $this->error = $error;
+
         $this->file = $file;
+
+        $this->media = $media;
+
+        $this->name = $name;
+
+        $this->size = $size;
     }
 
     /**
-     * Retrieve the filename sent by the client.
+     * Retrieves the filename sent by the client.
      *
      * @return string|null
      */
     public function getClientFilename()
     {
-        return $this->file->getClientFilename();
+        return $this->name;
     }
 
     /**
-     * Retrieve the media type sent by the client.
+     * Retrieves the media type sent by the client.
      *
      * @return string|null
      */
     public function getClientMediaType()
     {
-        return $this->file->getClientMediaType();
+        return $this->media;
     }
 
     /**
-     * Retrieve the error associated with the uploaded file.
+     * Retrieves the error associated with the uploaded file.
      *
      * @return integer
      */
     public function getError()
     {
-        return $this->file->getError();
+        return $this->error;
     }
 
     /**
-     * Retrieve the file size.
+     * Retrieves the file size.
      *
      * @return integer|null
      */
     public function getSize()
     {
-        return $this->file->getSize();
+        return $this->size;
     }
 
     /**
-     * Retrieve a stream representing the uploaded file.
+     * Retrieves a stream representing the uploaded file.
      *
-     * @return \Psr\Http\Message\StreamInterface
+     * @return \Zapheus\Http\Message\StreamInterface
      *
      * @throws \RuntimeException
      */
     public function getStream()
     {
-        return new Stream($this->file->getStream());
+        return new Stream(fopen($this->file, 'r'));
     }
 
     /**
@@ -89,6 +131,6 @@ class UploadedFile implements \Zapheus\Http\Message\UploadedFileInterface
      */
     public function moveTo($target)
     {
-        $this->file->moveTo($target);
+        rename($this->file, $target);
     }
 }

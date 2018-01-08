@@ -2,27 +2,75 @@
 
 namespace Zapheus\Bridge\Psr;
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Psr\Http\Message\StreamInterface;
 
 /**
- * PSR-07 to Zapheus Stream Bridge
+ * Stream
  *
  * @package Zapheus
+ * @author  Kévin Dunglas <dunglas@gmail.com>
+ * @author  Jérémy 'Jejem' Desvages <jejem@phyrexia.org>
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class Stream implements \Zapheus\Http\Message\StreamInterface
+class Stream implements StreamInterface
 {
     /**
-     * @var \Psr\Http\Message\StreamInterface
+     * Resource modes.
+     *
+     * @var array
      */
-    protected $stream;
+    protected $modes = array(
+        /**
+         * A listing of readable modes.
+         *
+         * @var array
+         */
+        'readable' => array('r', 'r+', 'w+', 'a+', 'x+', 'c+', 'w+b'),
+
+        /**
+         * A listing of writable modes.
+         *
+         * @var array
+         */
+        'writable' => array('r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+', 'w+b'),
+    );
+
+    /**
+     * Underline stream.
+     *
+     * @var resource|null
+     */
+    protected $stream = null;
+
+    /**
+     * Size of file.
+     *
+     * @var integer|null
+     */
+    protected $size = null;
+
+    /**
+     * Metadata of file.
+     *
+     * @var array|null
+     */
+    protected $meta = null;
 
     /**
      * Initializes the stream instance.
      *
-     * @param \Psr\Http\Message\StreamInterface $stream
+     * @param resource|null $stream
      */
-    public function __construct(StreamInterface $stream)
+    public function __construct($stream = null)
     {
         $this->stream = $stream;
     }
@@ -34,7 +82,9 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function __toString()
     {
-        return $this->stream->__toString();
+        $this->rewind();
+
+        return $this->getContents();
     }
 
     /**
@@ -44,7 +94,9 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function close()
     {
-        return $this->stream->close();
+        is_null($this->stream) ?: fclose($this->stream);
+
+        $this->detach();
     }
 
     /**
@@ -54,7 +106,13 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function detach()
     {
-        return $this->stream->detach();
+        $stream = $this->stream;
+
+        $this->meta = null;
+        $this->size = null;
+        $this->stream = null;
+
+        return $stream;
     }
 
     /**
@@ -64,7 +122,7 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function eof()
     {
-        return $this->stream->eof();
+        return is_null($this->stream) ?: feof($this->stream);
     }
 
     /**
@@ -76,28 +134,44 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function getContents()
     {
-        return $this->stream->getContents();
+        if (is_null($this->stream) || ! $this->isReadable()) {
+            $message = 'Could not get contents of stream';
+
+            throw new \RuntimeException($message);
+        }
+
+        return stream_get_contents($this->stream);
     }
 
     /**
-     * Get stream metadata as an associative array or retrieve a specific key.
+     * Returns stream metadata as an associative array or retrieve a specific key.
      *
      * @param  string $key
      * @return array|mixed|null
      */
     public function getMetadata($key = null)
     {
-        return $this->stream->getMetadata();
+        isset($this->stream) && $this->meta = stream_get_meta_data($this->stream);
+
+        $metadata = isset($this->meta[$key]) ? $this->meta[$key] : null;
+
+        return is_null($key) ? $this->meta : $metadata;
     }
 
     /**
-     * Get the size of the stream if known.
+     * Returns the size of the stream if known.
      *
      * @return integer|null
      */
     public function getSize()
     {
-        return $this->stream->getSize();
+        if (is_null($this->size) === true) {
+            $stats = fstat($this->stream);
+
+            $this->size = $stats['size'];
+        }
+
+        return $this->size;
     }
 
     /**
@@ -107,7 +181,11 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function isReadable()
     {
-        return $this->stream->isReadable();
+        $modes = $this->modes['readable'];
+
+        $mode = $this->getMetadata('mode');
+
+        return in_array($mode, $modes);
     }
 
     /**
@@ -117,7 +195,7 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function isSeekable()
     {
-        return $this->stream->isSeekable();
+        return $this->getMetadata('seekable');
     }
 
     /**
@@ -127,7 +205,11 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function isWritable()
     {
-        return $this->stream->isWritable();
+        $modes = $this->modes['writable'];
+
+        $mode = $this->getMetadata('mode');
+
+        return in_array($mode, $modes);
     }
 
     /**
@@ -140,7 +222,15 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function read($length)
     {
-        return $this->stream->read($length);
+        $data = fread($this->stream, $length);
+
+        if (! $this->isReadable() || $data === false) {
+            $message = 'Could not read from stream';
+
+            throw new \RuntimeException($message);
+        }
+
+        return $data;
     }
 
     /**
@@ -150,7 +240,7 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function rewind()
     {
-        return $this->seek(0);
+        $this->seek(0);
     }
 
     /**
@@ -163,7 +253,15 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        return $this->stream->seek($offset, $whence);
+        $seek = -1;
+
+        $this->stream && $seek = fseek($this->stream, $offset, $whence);
+
+        if (! $this->isSeekable() || $seek === -1) {
+            $message = 'Could not seek in stream';
+
+            throw new \RuntimeException($message);
+        }
     }
 
     /**
@@ -175,7 +273,17 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function tell()
     {
-        return $this->stream->tell();
+        $position = false;
+
+        $this->stream && $position = ftell($this->stream);
+
+        if (is_null($this->stream) || $position === false) {
+            $message = 'Could not get position of pointer in stream';
+
+            throw new \RuntimeException($message);
+        }
+
+        return $position;
     }
 
     /**
@@ -188,6 +296,14 @@ class Stream implements \Zapheus\Http\Message\StreamInterface
      */
     public function write($string)
     {
-        return $this->stream->write($string);
+        if (! $this->isWritable()) {
+            $message = 'Stream is not writable';
+
+            throw new \RuntimeException($message);
+        }
+
+        $this->size = null;
+
+        return fwrite($this->stream, $string);
     }
 }

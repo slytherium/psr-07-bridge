@@ -1,13 +1,13 @@
 <?php
 
-namespace Zapheus\Bridge\Psr;
+namespace Zapheus\Bridge\Psr\Zapheus;
 
-use Zend\Diactoros\Stream as ZendStream;
+use Zapheus\Bridge\Psr\Stream as PsrStream;
 
 /**
  * Stream Test
  *
- * @package Slytherin
+ * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
 class StreamTest extends \PHPUnit_Framework_TestCase
@@ -29,11 +29,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $file = __DIR__ . '/../../../Fixture/Views/LoremIpsum.php';
+        $file = __DIR__ . '/../Fixture/Views/LoremIpsum.php';
 
         $resource = fopen($file, 'r');
 
-        $this->psr = new ZendStream($resource);
+        $this->psr = new PsrStream($resource);
 
         $this->stream = new Stream($this->psr);
     }
@@ -61,11 +61,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
      */
     public function testEofMethod()
     {
-        $file = __DIR__ . '/../../../Fixture/Views/HelloWorld.php';
+        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
 
         $resource = fopen($file, 'w');
 
-        $stream = new Stream(new ZendStream($resource));
+        $stream = new Stream(new PsrStream($resource));
 
         $expected = false;
 
@@ -83,11 +83,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException');
 
-        $file = __DIR__ . '/../../../Fixture/Views/HelloWorld.php';
+        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
 
         $resource = fopen($file, 'w');
 
-        $stream = new Stream(new ZendStream($resource));
+        $stream = new Stream(new PsrStream($resource));
 
         $stream->getContents();
     }
@@ -108,7 +108,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $expected['mode'] = 'r';
         $expected['unread_bytes'] = 0;
         $expected['seekable'] = 1;
-        $expected['uri'] = __DIR__ . '/../../../Fixture/Views/LoremIpsum.php';
+        $expected['uri'] = __DIR__ . '/../Fixture/Views/LoremIpsum.php';
 
         $result = $this->stream->getMetadata();
 
@@ -196,11 +196,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException');
 
-        $file = __DIR__ . '/../../../Fixture/Views/HelloWorld.php';
+        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
 
         $resource = fopen($file, 'w');
 
-        $stream = new Stream(new ZendStream($resource));
+        $stream = new Stream(new PsrStream($resource));
 
         $stream->read(4);
     }
@@ -231,11 +231,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 2;
 
-        $file = __DIR__ . '/../../../Fixture/Views/HelloWorld.php';
+        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
 
         $resource = fopen($file, 'w');
 
-        $stream = new Stream(new ZendStream($resource));
+        $stream = new Stream(new PsrStream($resource));
 
         $stream->seek($expected);
 
@@ -253,11 +253,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException');
 
-        $file = __DIR__ . '/../../../Fixture/Views/HelloWorld.php';
+        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
 
         $resource = fopen($file, 'w');
 
-        $stream = new Stream(new ZendStream($resource));
+        $stream = new Stream(new PsrStream($resource));
 
         $stream->detach();
 
@@ -273,15 +273,37 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException');
 
-        $file = __DIR__ . '/../../../Fixture/Views/HelloWorld.php';
+        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
 
         $resource = fopen($file, 'w');
 
-        $stream = new Stream(new ZendStream($resource));
+        $stream = new Stream(new PsrStream($resource));
 
         $stream->detach();
 
         $stream->tell();
+    }
+
+    /**
+     * Tests StreamInterface::write.
+     *
+     * @return void
+     */
+    public function testWriteMethod()
+    {
+        $file = __DIR__ . '/../Fixture/Views/PopPop.php';
+
+        $resource = fopen($file, 'r+');
+
+        $stream = new Stream(new PsrStream($resource));
+
+        $expected = 'Hello world dolor sit amet';
+
+        $stream->write($expected);
+
+        $result = (string) $stream;
+
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -293,11 +315,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException');
 
-        $file = __DIR__ . '/../../../Fixture/Views/LoremIpsum.php';
+        $file = __DIR__ . '/../Fixture/Views/LoremIpsum.php';
 
         $resource = fopen($file, 'r');
 
-        $stream = new Stream(new ZendStream($resource));
+        $stream = new Stream(new PsrStream($resource));
 
         $stream->write('Hello world');
     }

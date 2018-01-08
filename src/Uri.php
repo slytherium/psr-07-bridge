@@ -2,28 +2,79 @@
 
 namespace Zapheus\Bridge\Psr;
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Psr\Http\Message\UriInterface;
 
 /**
- * PSR-07 to Zapheus URI Bridge
+ * URI
  *
  * @package Zapheus
+ * @author  Kévin Dunglas <dunglas@gmail.com>
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class Uri implements \Zapheus\Http\Message\UriInterface
+class Uri implements UriInterface
 {
     /**
-     * @var \Psr\Http\Message\UriInterface
+     * @var string
      */
-    protected $uri;
+    protected $scheme = '';
 
     /**
-     * Initializes the URI instance.
-     *
-     * @param \Psr\Http\Message\UriInterface $uri
+     * @var string
      */
-    public function __construct(UriInterface $uri)
+    protected $user = '';
+
+    /**
+     * @var string
+     */
+    protected $host = '';
+
+    /**
+     * @var integer|null
+     */
+    protected $port = null;
+
+    /**
+     * @var string
+     */
+    protected $path = '';
+
+    /**
+     * @var string
+     */
+    protected $query = '';
+
+    /**
+     * @var string
+     */
+    protected $fragment = '';
+
+    /**
+     * @var string
+     */
+    protected $uri = '';
+
+    /**
+     * @param string $uri
+     */
+    public function __construct($uri = '')
     {
+        $parts = parse_url($uri) ?: array();
+
+        foreach ($parts as $key => $value) {
+            $key === 'user' && $this->user = $value;
+
+            $this->$key = $value;
+        }
+
         $this->uri = $uri;
     }
 
@@ -34,102 +85,114 @@ class Uri implements \Zapheus\Http\Message\UriInterface
      */
     public function __toString()
     {
-        return (string) $this->uri;
+        return $this->uri;
     }
 
     /**
-     * Retrieve the authority component of the URI.
+     * Retrieves the authority component of the URI.
      *
      * @return string
      */
     public function getAuthority()
     {
-        return $this->uri->getAuthority();
+        $authority = $this->host;
+
+        if (! empty($this->host) && ! empty($this->user)) {
+            $authority = $this->user . '@' . $authority;
+
+            $authority .= ':'. $this->port;
+        }
+
+        return $authority;
     }
 
     /**
-     * Retrieve the fragment component of the URI.
+     * Retrieves the fragment component of the URI.
      *
      * @return string
      */
     public function getFragment()
     {
-        return $this->uri->getFragment();
+        return $this->fragment;
     }
 
     /**
-     * Retrieve the host component of the URI.
+     * Retrieves the host component of the URI.
      *
      * @return string
      */
     public function getHost()
     {
-        return $this->uri->getHost();
+        return $this->host;
     }
 
     /**
-     * Retrieve the path component of the URI.
+     * Retrieves the path component of the URI.
      *
      * @return string
      */
     public function getPath()
     {
-        return $this->uri->getPath();
+        return $this->path;
     }
 
     /**
-     * Retrieve the port component of the URI.
+     * Retrieves the port component of the URI.
      *
      * @return null|integer
      */
     public function getPort()
     {
-        return $this->uri->getPort();
+        return $this->port;
     }
 
     /**
-     * Retrieve the query string of the URI.
+     * Retrieves the query string of the URI.
      *
      * @return string
      */
     public function getQuery()
     {
-        return $this->uri->getQuery();
+        return $this->query;
     }
 
     /**
-     * Retrieve the scheme component of the URI.
+     * Retrieves the scheme component of the URI.
      *
      * @return string
      */
     public function getScheme()
     {
-        return $this->uri->getScheme();
+        return $this->scheme;
     }
 
     /**
-     * Retrieve the user information component of the URI.
+     * Retrieves the user information component of the URI.
      *
      * @return string
      */
     public function getUserInfo()
     {
-        return $this->uri->getUserInfo();
+        return $this->user;
     }
 
     /**
-     * Return an instance with the specified URI fragment.
+     * Returns an instance with the specified URI fragment.
      *
      * @param  string $fragment
      * @return static
      */
     public function withFragment($fragment)
     {
-        return $this->uri->withFragment($fragment);
+        $new = clone $this;
+
+        $new->fragment = $fragment;
+
+        return $new;
     }
 
     /**
-     * Return an instance with the specified host.
+     * Returns an instance with the specified host.
      *
      * @param  string $host
      * @return static
@@ -138,11 +201,17 @@ class Uri implements \Zapheus\Http\Message\UriInterface
      */
     public function withHost($host)
     {
-        return $this->uri->withHost($host);
+        // TODO: Add \InvalidArgumentException
+
+        $new = clone $this;
+
+        $new->host = $host;
+
+        return $new;
     }
 
     /**
-     * Return an instance with the specified path.
+     * Returns an instance with the specified path.
      *
      * @param  string $path
      * @return static
@@ -151,11 +220,17 @@ class Uri implements \Zapheus\Http\Message\UriInterface
      */
     public function withPath($path)
     {
-        return $this->uri->withPath($path);
+        // TODO: Add \InvalidArgumentException
+
+        $new = clone $this;
+
+        $new->path = $path;
+
+        return $new;
     }
 
     /**
-     * Return an instance with the specified port.
+     * Returns an instance with the specified port.
      *
      * @param  null|integer $port
      * @return static
@@ -164,11 +239,17 @@ class Uri implements \Zapheus\Http\Message\UriInterface
      */
     public function withPort($port)
     {
-        return $this->uri->withPort($port);
+        // TODO: Add \InvalidArgumentException
+
+        $new = clone $this;
+
+        $new->port = $port;
+
+        return $new;
     }
 
     /**
-     * Return an instance with the specified query string.
+     * Returns an instance with the specified query string.
      *
      * @param  string $query
      * @return static
@@ -177,11 +258,17 @@ class Uri implements \Zapheus\Http\Message\UriInterface
      */
     public function withQuery($query)
     {
-        return $this->uri->withQuery($query);
+        // TODO: Add \InvalidArgumentException
+
+        $new = clone $this;
+
+        $new->query = $query;
+
+        return $new;
     }
 
     /**
-     * Return an instance with the specified scheme.
+     * Returns an instance with the specified scheme.
      *
      * @param  string $scheme
      * @return static
@@ -190,11 +277,17 @@ class Uri implements \Zapheus\Http\Message\UriInterface
      */
     public function withScheme($scheme)
     {
-        return $this->uri->withScheme($scheme);
+        // TODO: Add \InvalidArgumentException
+
+        $new = clone $this;
+
+        $new->scheme = $scheme;
+
+        return $new;
     }
 
     /**
-     * Return an instance with the specified user information.
+     * Returns an instance with the specified user information.
      *
      * @param  string      $user
      * @param  null|string $password
@@ -202,6 +295,10 @@ class Uri implements \Zapheus\Http\Message\UriInterface
      */
     public function withUserInfo($user, $password = null)
     {
-        return $this->uri->withUserInfo($user, $password);
+        $new = clone $this;
+
+        $new->user = $user . ':' . $password;
+
+        return $new;
     }
 }
