@@ -112,7 +112,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
         $result = $this->stream->getMetadata();
 
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected['uri'], $result['uri']);
     }
 
     /**

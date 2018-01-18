@@ -1,4 +1,4 @@
-# PSR-7 <-> Zapheus HTTP Bridge
+# PSR-07 Bridge
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Converts [PSR-7](http://www.php-fig.org/psr/psr-7) messages to [Zapheus](https://github.com/zapheus/zapheus) HTTP messages and vice versa. Also contains an implementation of [PSR-7](http://www.php-fig.org/psr/psr-7).
+Converts [PSR-07](http://www.php-fig.org/psr/psr-7) messages to [Zapheus](https://github.com/zapheus/zapheus) HTTP messages and vice versa. Also contains an implementation of [PSR-07](http://www.php-fig.org/psr/psr-7).
 
 ## Install
 
@@ -19,9 +19,9 @@ $ composer require zapheus/psr-07-bridge
 
 ## Usage
 
-### PSR-7 to Zapheus
+### PSR-07 to Zapheus
 
-Install a PSR-7 compliant package first (e.g [Diactoros](https://github.com/zendframework/zend-diactoros)):
+Install a PSR-07 compliant package first (e.g [Diactoros](https://github.com/zendframework/zend-diactoros)):
 
 ``` bash
 $ composer require zendframework/zend-diactoros
@@ -37,7 +37,7 @@ $psr = ServerRequestFactory::fromGlobals();
 $request = new ServerRequest($psr);
 ```
 
-### Zapheus to PSR-7
+### Zapheus to PSR-07
 
 ``` php
 use Zapheus\Bridge\Psr\Interop\ServerRequest;
