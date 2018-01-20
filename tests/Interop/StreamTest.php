@@ -136,7 +136,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsReadableMethod()
     {
-        $expected = $this->zapheus->isReadable();
+        $expected = $this->zapheus->readable();
 
         $result = $this->stream->isReadable();
 
@@ -150,7 +150,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsSeekableMethod()
     {
-        $expected = $this->zapheus->isSeekable();
+        $expected = $this->zapheus->seekable();
 
         $result = $this->stream->isSeekable();
 
@@ -164,7 +164,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsWritableMethod()
     {
-        $expected = $this->zapheus->isWritable();
+        $expected = $this->zapheus->writable();
 
         $result = $this->stream->isWritable();
 

@@ -57,7 +57,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 'me@rougin.github.io:400';
 
-        $result = $this->uri->getAuthority();
+        $result = $this->uri->authority();
 
         $this->assertEquals($expected, $result);
     }
@@ -71,23 +71,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
     {
         $expected = $this->psr->getFragment();
 
-        $result = $this->uri->getFragment();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests UriInterface::withFragment.
-     *
-     * @return void
-     */
-    public function testWithFragmentMethod()
-    {
-        $expected = 'test';
-
-        $uri = $this->uri->withFragment($expected);
-
-        $result = $uri->getFragment();
+        $result = $this->uri->fragment();
 
         $this->assertEquals($expected, $result);
     }
@@ -101,23 +85,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
     {
         $expected = $this->psr->getHost();
 
-        $result = $this->uri->getHost();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests UriInterface::withHost.
-     *
-     * @return void
-     */
-    public function testWithHostMethod()
-    {
-        $expected = 'rougin.github.io';
-
-        $uri = $this->uri->withHost($expected);
-
-        $result = $uri->getHost();
+        $result = $this->uri->host();
 
         $this->assertEquals($expected, $result);
     }
@@ -131,23 +99,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
     {
         $expected = $this->psr->getPath();
 
-        $result = $this->uri->getPath();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests UriInterface::withPath.
-     *
-     * @return void
-     */
-    public function testWithPathMethod()
-    {
-        $expected = '/test';
-
-        $uri = $this->uri->withPath($expected);
-
-        $result = $uri->getPath();
+        $result = $this->uri->path();
 
         $this->assertEquals($expected, $result);
     }
@@ -161,23 +113,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
     {
         $expected = $this->psr->getPort();
 
-        $result = $this->uri->getPort();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests UriInterface::withPort.
-     *
-     * @return void
-     */
-    public function testWithPortMethod()
-    {
-        $expected = 500;
-
-        $uri = $this->uri->withPort($expected);
-
-        $result = $uri->getPort();
+        $result = $this->uri->port();
 
         $this->assertEquals($expected, $result);
     }
@@ -191,23 +127,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
     {
         $expected = $this->psr->getQuery();
 
-        $result = $this->uri->getQuery();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests UriInterface::withQuery.
-     *
-     * @return void
-     */
-    public function testWithQueryMethod()
-    {
-        $expected = 'type=user';
-
-        $uri = $this->uri->withQuery($expected);
-
-        $result = $uri->getQuery();
+        $result = $this->uri->query();
 
         $this->assertEquals($expected, $result);
     }
@@ -221,25 +141,9 @@ class UriTest extends \PHPUnit_Framework_TestCase
     {
         $expected = $this->psr->getScheme();
 
-        $result = $this->uri->getScheme();
+        $result = $this->uri->scheme();
 
         $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests UriInterface::withScheme.
-     *
-     * @return void
-     */
-    public function testWithSchemeMethod()
-    {
-        $expected = 'http';
-
-        $uri = $this->uri->withScheme($expected);
-
-        $result = $uri->getScheme();
-
-        $this->assertEquals('http', $result);
     }
 
     /**
@@ -251,23 +155,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
     {
         $expected = $this->psr->getUserInfo();
 
-        $result = $this->uri->getUserInfo();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests UriInterface::withUserInfo.
-     *
-     * @return void
-     */
-    public function testWithUserInfoMethod()
-    {
-        $expected = 'username:password';
-
-        $uri = $this->uri->withUserInfo('username', 'password');
-
-        $result = $uri->getUserInfo();
+        $result = $this->uri->user();
 
         $this->assertEquals($expected, $result);
     }

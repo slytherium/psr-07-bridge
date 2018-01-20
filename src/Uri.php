@@ -25,17 +25,17 @@ class Uri implements UriInterface
     /**
      * @var string
      */
-    protected $scheme = '';
-
-    /**
-     * @var string
-     */
-    protected $user = '';
+    protected $fragment = '';
 
     /**
      * @var string
      */
     protected $host = '';
+
+    /**
+     * @var string
+     */
+    protected $path = '';
 
     /**
      * @var integer|null
@@ -45,22 +45,22 @@ class Uri implements UriInterface
     /**
      * @var string
      */
-    protected $path = '';
-
-    /**
-     * @var string
-     */
     protected $query = '';
 
     /**
      * @var string
      */
-    protected $fragment = '';
+    protected $scheme = '';
 
     /**
      * @var string
      */
     protected $uri = '';
+
+    /**
+     * @var string
+     */
+    protected $user = '';
 
     /**
      * @param string $uri
@@ -97,10 +97,10 @@ class Uri implements UriInterface
     {
         $authority = $this->host;
 
-        if (! empty($this->host) && ! empty($this->user)) {
+        if ($this->host !== '' && $this->user !== null) {
             $authority = $this->user . '@' . $authority;
 
-            $authority .= ':'. $this->port;
+            $authority = $authority . ':' . $this->port;
         }
 
         return $authority;

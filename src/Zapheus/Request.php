@@ -3,7 +3,8 @@
 namespace Zapheus\Bridge\Psr\Zapheus;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Zapheus\Http\Message\ServerRequest as ZapheusServerRequest;
+use Zapheus\Http\Message\Collection;
+use Zapheus\Http\Message\Request as ZapheusRequest;
 
 /**
  * PSR-07 to Zapheus Server Request Bridge
@@ -11,7 +12,7 @@ use Zapheus\Http\Message\ServerRequest as ZapheusServerRequest;
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class ServerRequest extends ZapheusServerRequest
+class Request extends ZapheusRequest
 {
     /**
      * Initializes the server request instance.
@@ -30,13 +31,15 @@ class ServerRequest extends ZapheusServerRequest
 
         $attributes = $request->getAttributes();
 
-        list($uri, $body) = $this->request($request);
+        parent::__construct($server, $cookies, $data, $files, $query, $attributes);
 
-        $headers = $request->getHeaders();
+        $this->set('headers', new Collection($request->getHeaders()), true);
 
-        $version = $request->getProtocolVersion();
+        $this->set('uri', new Uri($request->getUri()), true);
 
-        parent::__construct($server, $cookies, $query, $files, $data, $attributes, $uri, $body, $headers, $version);
+        $this->set('stream', new Stream($request->getBody()), true);
+
+        $this->set('version', $request->getProtocolVersion(), true);
     }
 
     /**
@@ -47,35 +50,20 @@ class ServerRequest extends ZapheusServerRequest
      */
     protected function globals(ServerRequestInterface $request)
     {
-        $uploaded = array();
+        list($items, $uploaded) = array(array(), array());
 
         $items = $request->getUploadedFiles();
-
-        $query = $request->getQueryParams();
 
         foreach ((array) $items as $key => $files) {
             $uploaded[$key] = array();
 
             foreach ((array) $files as $file) {
-                $item = new UploadedFile($file);
+                $item = new File($file);
                 
                 array_push($uploaded[$key], $item);
             }
         }
    
-        return array($query, $uploaded);
-    }
-
-    /**
-     * Returns a listing of request variables.
-     *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request
-     * @return array
-     */
-    protected function request(ServerRequestInterface $request)
-    {
-        $uri = new Uri($request->getUri());
-
-        return array($uri, new Stream($request->getBody()));
+        return array($request->getQueryParams(), $uploaded);
     }
 }

@@ -77,7 +77,7 @@ class Stream implements PsrStreamInterface
      */
     public function getContents()
     {
-        return $this->stream->getContents();
+        return $this->stream->contents();
     }
 
     /**
@@ -88,7 +88,7 @@ class Stream implements PsrStreamInterface
      */
     public function getMetadata($key = null)
     {
-        return $this->stream->getMetadata();
+        return $this->stream->metadata($key);
     }
 
     /**
@@ -98,7 +98,7 @@ class Stream implements PsrStreamInterface
      */
     public function getSize()
     {
-        return $this->stream->getSize();
+        return $this->stream->size();
     }
 
     /**
@@ -108,7 +108,7 @@ class Stream implements PsrStreamInterface
      */
     public function isReadable()
     {
-        return $this->stream->isReadable();
+        return $this->stream->readable();
     }
 
     /**
@@ -118,7 +118,7 @@ class Stream implements PsrStreamInterface
      */
     public function isSeekable()
     {
-        return $this->stream->isSeekable();
+        return $this->stream->seekable();
     }
 
     /**
@@ -128,7 +128,7 @@ class Stream implements PsrStreamInterface
      */
     public function isWritable()
     {
-        return $this->stream->isWritable();
+        return $this->stream->writable();
     }
 
     /**

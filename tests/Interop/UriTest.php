@@ -69,7 +69,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFragmentMethod()
     {
-        $expected = $this->zapheus->getFragment();
+        $expected = $this->zapheus->fragment();
 
         $result = $this->uri->getFragment();
 
@@ -99,7 +99,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetHostMethod()
     {
-        $expected = $this->zapheus->getHost();
+        $expected = $this->zapheus->host();
 
         $result = $this->uri->getHost();
 
@@ -129,7 +129,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPathMethod()
     {
-        $expected = $this->zapheus->getPath();
+        $expected = $this->zapheus->path();
 
         $result = $this->uri->getPath();
 
@@ -159,7 +159,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPortMethod()
     {
-        $expected = $this->zapheus->getPort();
+        $expected = $this->zapheus->port();
 
         $result = $this->uri->getPort();
 
@@ -189,7 +189,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetQueryMethod()
     {
-        $expected = $this->zapheus->getQuery();
+        $expected = $this->zapheus->query();
 
         $result = $this->uri->getQuery();
 
@@ -219,7 +219,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSchemeMethod()
     {
-        $expected = $this->zapheus->getScheme();
+        $expected = $this->zapheus->scheme();
 
         $result = $this->uri->getScheme();
 
@@ -249,7 +249,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUserInfoMethod()
     {
-        $expected = $this->zapheus->getUserInfo();
+        $expected = $this->zapheus->user();
 
         $result = $this->uri->getUserInfo();
 

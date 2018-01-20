@@ -2,7 +2,7 @@
 
 namespace Zapheus\Bridge\Psr\Interop;
 
-use Zapheus\Http\Message\UploadedFile as ZapheusUploadedFile;
+use Zapheus\Http\Message\File;
 
 /**
  * Uploaded File Test
@@ -138,7 +138,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 
         $type = mime_content_type($file);
 
-        $zapheus = new ZapheusUploadedFile($file, $size, UPLOAD_ERR_OK, $name, $type);
+        $zapheus = new File($file, $size, UPLOAD_ERR_OK, $name, $type);
 
         return new UploadedFile($zapheus);
     }

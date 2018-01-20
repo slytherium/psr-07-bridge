@@ -20,13 +20,13 @@ class Response extends PsrResponse
      */
     public function __construct(ResponseInterface $response)
     {
-        $body = new Stream($response->getBody());
+        $body = new Stream($response->stream());
 
-        $code = $response->getStatusCode();
+        $code = $response->code();
 
-        $version = $response->getProtocolVersion();
+        $version = $response->version();
 
-        $headers = $response->getHeaders();
+        $headers = $response->headers()->all();
 
         parent::__construct($code, $body, $headers, $version);
     }

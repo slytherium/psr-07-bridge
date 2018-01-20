@@ -2,8 +2,8 @@
 
 namespace Zapheus\Bridge\Psr\Interop;
 
-use Psr\Http\Message\UploadedFileInterface as PsrUploadedFileInterface;
-use Zapheus\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UploadedFileInterface;
+use Zapheus\Http\Message\FileInterface;
 
 /**
  * Zapheus to PSR-07 Uploaded File Bridge
@@ -11,19 +11,19 @@ use Zapheus\Http\Message\UploadedFileInterface;
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class UploadedFile implements PsrUploadedFileInterface
+class UploadedFile implements UploadedFileInterface
 {
     /**
-     * @var \Zapheus\Http\Message\UploadedFileInterface
+     * @var \Zapheus\Http\Message\FileInterface
      */
     protected $file;
 
     /**
      * Initializes the uploaded file instance.
      *
-     * @param \Zapheus\Http\Message\UploadedFileInterface $file
+     * @param \Zapheus\Http\Message\FileInterface $file
      */
-    public function __construct(UploadedFileInterface $file)
+    public function __construct(FileInterface $file)
     {
         $this->file = $file;
     }
@@ -35,7 +35,7 @@ class UploadedFile implements PsrUploadedFileInterface
      */
     public function getClientFilename()
     {
-        return $this->file->getClientFilename();
+        return $this->file->name();
     }
 
     /**
@@ -45,7 +45,7 @@ class UploadedFile implements PsrUploadedFileInterface
      */
     public function getClientMediaType()
     {
-        return $this->file->getClientMediaType();
+        return $this->file->type();
     }
 
     /**
@@ -55,7 +55,7 @@ class UploadedFile implements PsrUploadedFileInterface
      */
     public function getError()
     {
-        return $this->file->getError();
+        return $this->file->error();
     }
 
     /**
@@ -65,7 +65,7 @@ class UploadedFile implements PsrUploadedFileInterface
      */
     public function getSize()
     {
-        return $this->file->getSize();
+        return $this->file->size();
     }
 
     /**
@@ -77,7 +77,7 @@ class UploadedFile implements PsrUploadedFileInterface
      */
     public function getStream()
     {
-        return new Stream($this->file->getStream());
+        return new Stream($this->file->stream());
     }
 
     /**
@@ -90,6 +90,6 @@ class UploadedFile implements PsrUploadedFileInterface
      */
     public function moveTo($target)
     {
-        $this->file->moveTo($target);
+        $this->file->move($target);
     }
 }

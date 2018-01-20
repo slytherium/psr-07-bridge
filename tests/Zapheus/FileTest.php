@@ -2,15 +2,15 @@
 
 namespace Zapheus\Bridge\Psr\Zapheus;
 
-use Zapheus\Bridge\Psr\UploadedFile as PsrUploadedFile;
+use Zapheus\Bridge\Psr\UploadedFile;
 
 /**
- * Uploaded File Test
+ * File Test
  *
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class UploadedFileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string
@@ -35,43 +35,43 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests UploadedFileInterface::getClientFilename.
+     * Tests UploadedFileInterface::name.
      *
      * @return void
      */
-    public function testGetClientFilenameMethod()
+    public function testNameMethod()
     {
         $expected = basename($this->file);
 
-        $result = $this->uploaded->getClientFilename();
+        $result = $this->uploaded->name();
 
         $this->assertEquals($expected, $result);
     }
 
     /**
-     * Tests UploadedFileInterface::getClientMediaType.
+     * Tests UploadedFileInterface::type.
      *
      * @return void
      */
-    public function testGetClientMediaTypeMethod()
+    public function testTypeMethod()
     {
         $expected = mime_content_type($this->file);
 
-        $result = $this->uploaded->getClientMediaType();
+        $result = $this->uploaded->type();
 
         $this->assertEquals($expected, $result);
     }
 
     /**
-     * Tests UploadedFileInterface::getError.
+     * Tests UploadedFileInterface::error.
      *
      * @return void
      */
-    public function testGetErrorMethod()
+    public function testErrorMethod()
     {
         $expected = UPLOAD_ERR_OK;
 
-        $result = $this->uploaded->getError();
+        $result = $this->uploaded->error();
 
         $this->assertEquals($expected, $result);
     }
@@ -81,11 +81,11 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testGetSizeMethod()
+    public function testSizeMethod()
     {
         $expected = filesize($this->file);
 
-        $result = $this->uploaded->getSize();
+        $result = $this->uploaded->size();
 
         $this->assertEquals($expected, $result);
     }
@@ -95,11 +95,11 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testGetStreamMethod()
+    public function testStreamMethod()
     {
         $expected = 'Zapheus\Http\Message\StreamInterface';
 
-        $result = $this->uploaded->getStream();
+        $result = $this->uploaded->stream();
 
         $this->assertInstanceof($expected, $result);
     }
@@ -113,13 +113,13 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
     {
         $target = str_replace('PopPop', 'NewFile', $this->file);
 
-        $this->uploaded->moveTo($target);
+        $this->uploaded->move($target);
 
         $this->assertFileExists($target);
 
         $uploaded = $this->instance($target);
 
-        $uploaded->moveTo($this->file);
+        $uploaded->move($this->file);
     }
 
     /**
@@ -138,8 +138,8 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 
         $type = mime_content_type($file);
 
-        $psr = new PsrUploadedFile($file, $size, UPLOAD_ERR_OK, $name, $type);
+        $psr = new UploadedFile($file, $size, UPLOAD_ERR_OK, $name, $type);
 
-        return new UploadedFile($psr);
+        return new File($psr);
     }
 }

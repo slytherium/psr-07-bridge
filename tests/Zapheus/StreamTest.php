@@ -75,11 +75,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests StreamInterface::getContents with \RuntimeException.
+     * Tests StreamInterface::contents with \RuntimeException.
      *
      * @return void
      */
-    public function testGetContentsMethodWithRuntimeException()
+    public function testContentsMethodWithRuntimeException()
     {
         $this->setExpectedException('RuntimeException');
 
@@ -89,15 +89,15 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
         $stream = new Stream(new PsrStream($resource));
 
-        $stream->getContents();
+        $stream->contents();
     }
 
     /**
-     * Tests StreamInterface::getMetadata.
+     * Tests StreamInterface::metadata.
      *
      * @return void
      */
-    public function testGetMetadataMethod()
+    public function testMetadataMethod()
     {
         $expected = array('eof' => false);
 
@@ -110,21 +110,21 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $expected['seekable'] = 1;
         $expected['uri'] = __DIR__ . '/../Fixture/Views/LoremIpsum.php';
 
-        $result = $this->stream->getMetadata();
+        $result = $this->stream->metadata();
 
         $this->assertEquals($expected['uri'], $result['uri']);
     }
 
     /**
-     * Tests StreamInterface::getSize.
+     * Tests StreamInterface::size.
      *
      * @return void
      */
-    public function testGetSizeMethod()
+    public function testSizeMethod()
     {
         $expected = 26;
 
-        $result = $this->stream->getSize();
+        $result = $this->stream->size();
 
         $this->assertEquals($expected, $result);
     }
@@ -134,11 +134,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testIsReadableMethod()
+    public function testReadableMethod()
     {
         $expected = $this->psr->isReadable();
 
-        $result = $this->stream->isReadable();
+        $result = $this->stream->readable();
 
         $this->assertEquals($expected, $result);
     }
@@ -148,11 +148,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testIsSeekableMethod()
+    public function testSeekableMethod()
     {
         $expected = $this->psr->isSeekable();
 
-        $result = $this->stream->isSeekable();
+        $result = $this->stream->seekable();
 
         $this->assertEquals($expected, $result);
     }
@@ -162,11 +162,11 @@ class StreamTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testIsWritableMethod()
+    public function testWritableMethod()
     {
         $expected = $this->psr->isWritable();
 
-        $result = $this->stream->isWritable();
+        $result = $this->stream->writable();
 
         $this->assertEquals($expected, $result);
     }
@@ -217,7 +217,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
 
         $this->stream->rewind();
 
-        $result = $this->stream->getContents();
+        $result = $this->stream->contents();
 
         $this->assertEquals($expected, $result);
     }

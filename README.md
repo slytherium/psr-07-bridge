@@ -28,19 +28,20 @@ $ composer require zendframework/zend-diactoros
 ```
 
 ``` php
-use Zapheus\Bridge\Psr\Zapheus\ServerRequest;
+use Zapheus\Bridge\Psr\Zapheus\Request;
 use Zend\Diactoros\ServerRequestFactory;
 
 $psr = ServerRequestFactory::fromGlobals();
 
-// Zapheus\Http\Message\ServerRequestInterface
-$request = new ServerRequest($psr);
+// Zapheus\Http\Message\RequestInterface
+$request = new Request($psr);
 ```
 
 ### Zapheus to PSR-07
 
 ``` php
 use Zapheus\Bridge\Psr\Interop\ServerRequest;
+use Zapheus\Http\Message\RequestInterface;
 
 $container = new Zapheus\Container\Container;
 
@@ -48,7 +49,7 @@ $provider = new Zapheus\Http\MessageProvider;
 
 $container = $provider->register($container);
 
-$zapheus = $container->get('Zapheus\Http\Message\ServerRequest');
+$zapheus = $container->get(RequestInterface::class);
 
 // Psr\Http\Message\ServerRequestInterface
 $request = new ServerRequest($zapheus);

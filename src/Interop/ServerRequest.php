@@ -3,7 +3,7 @@
 namespace Zapheus\Bridge\Psr\Interop;
 
 use Zapheus\Bridge\Psr\ServerRequest as PsrServerRequest;
-use Zapheus\Http\Message\ServerRequestInterface;
+use Zapheus\Http\Message\RequestInterface;
 
 /**
  * Zapheus to PSR-07 Server Request Bridge
@@ -16,25 +16,25 @@ class ServerRequest extends PsrServerRequest
     /**
      * Initializes the server request instance.
      *
-     * @param \Zapheus\Http\Message\ServerRequestInterface $request
+     * @param \Zapheus\Http\Message\RequestInterface $request
      */
-    public function __construct(ServerRequestInterface $request)
+    public function __construct(RequestInterface $request)
     {
-        $server = $request->getServerParams();
+        $server = $request->server()->all();
 
-        $cookies = $request->getCookieParams();
+        $cookies = $request->cookies()->all();
 
         list($query, $files) = $this->globals($request);
 
-        $data = $request->getParsedBody();
+        $data = $request->data();
 
-        $attributes = $request->getAttributes();
+        $attributes = $request->attributes()->all();
 
         list($uri, $body) = $this->request($request);
 
-        $headers = $request->getHeaders();
+        $headers = $request->headers()->all();
 
-        $version = $request->getProtocolVersion();
+        $version = $request->version();
 
         parent::__construct($server, $cookies, $query, $files, $data, $attributes, $uri, $body, $headers, $version);
     }
@@ -42,16 +42,12 @@ class ServerRequest extends PsrServerRequest
     /**
      * Returns a listing of globals.
      *
-     * @param  \Zapheus\Http\Message\ServerRequestInterface $request
+     * @param  \Zapheus\Http\Message\RequestInterface $request
      * @return array
      */
-    protected function globals(ServerRequestInterface $request)
+    protected function globals(RequestInterface $request)
     {
-        $uploaded = array();
-
-        $items = $request->getUploadedFiles();
-
-        $query = $request->getQueryParams();
+        list($items, $uploaded) = array($request->files(), array());
 
         foreach ((array) $items as $key => $files) {
             $uploaded[$key] = array();
@@ -63,19 +59,19 @@ class ServerRequest extends PsrServerRequest
             }
         }
    
-        return array($query, $uploaded);
+        return array($request->query()->all(), $uploaded);
     }
 
     /**
      * Returns a listing of request variables.
      *
-     * @param  \Zapheus\Http\Message\ServerRequestInterface $request
+     * @param  \Zapheus\Http\Message\RequestInterface $request
      * @return array
      */
-    protected function request(ServerRequestInterface $request)
+    protected function request(RequestInterface $request)
     {
-        $uri = new Uri($request->getUri());
+        $uri = new Uri($request->uri());
 
-        return array($uri, new Stream($request->getBody()));
+        return array($uri, new Stream($request->stream()));
     }
 }

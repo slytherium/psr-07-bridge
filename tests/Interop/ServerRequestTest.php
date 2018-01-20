@@ -2,10 +2,10 @@
 
 namespace Zapheus\Bridge\Psr\Interop;
 
-use Zapheus\Http\Message\ServerRequest as ZapheusServerRequest;
-use Zapheus\Http\Message\Stream as ZapheusStream;
 use Zapheus\Bridge\Psr\UploadedFile;
 use Zapheus\Bridge\Psr\Uri;
+use Zapheus\Http\Message\Request as ZapheusRequest;
+use Zapheus\Http\Message\Stream as ZapheusStream;
 
 /**
  * Server Request Test
@@ -48,9 +48,9 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
         $_FILES['file']['tmp_name'] = array('/tmp/test.txt');
         $_FILES['file']['type'] = array('text/plain');
 
-        $request = new ZapheusServerRequest($_SERVER, array(), array(), $_FILES);
+        $request = new ZapheusRequest($_SERVER, array(), array(), $_FILES);
 
-        $this->server = $request->getServerParams();
+        $this->server = $request->server()->all();
 
         $this->request = new ServerRequest($request);
     }

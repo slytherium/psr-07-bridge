@@ -3,6 +3,7 @@
 namespace Zapheus\Bridge\Psr\Zapheus;
 
 use Psr\Http\Message\ResponseInterface;
+use Zapheus\Http\Message\Collection;
 use Zapheus\Http\Message\Response as ZapheusResponse;
 
 /**
@@ -14,20 +15,18 @@ use Zapheus\Http\Message\Response as ZapheusResponse;
 class Response extends ZapheusResponse
 {
     /**
-     * Initializes the server request instance.
+     * Initializes the response instance.
      *
      * @param \Psr\Http\Message\ResponseInterface $response
      */
     public function __construct(ResponseInterface $response)
     {
-        $body = new Stream($response->getBody());
+        parent::__construct((integer) $response->getStatusCode());
 
-        $code = $response->getStatusCode();
+        $this->set('headers', new Collection($response->getHeaders()), true);
 
-        $version = $response->getProtocolVersion();
+        $this->set('stream', new Stream($response->getBody()), true);
 
-        $headers = $response->getHeaders();
-
-        parent::__construct($code, $body, $headers, $version);
+        $this->set('version', $response->getProtocolVersion(), true);
     }
 }

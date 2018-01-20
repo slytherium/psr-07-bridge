@@ -13,19 +13,9 @@ use Zapheus\Bridge\Psr\Response as PsrResponse;
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var array
-     */
-    protected $files = array('file' => array());
-
-    /**
      * @var \Zapheus\Http\Message\ResponseInterface
      */
     protected $response;
-
-    /**
-     * @var array
-     */
-    protected $server = array();
 
     /**
      * Sets up the response instance.
@@ -40,33 +30,33 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests ResponseInterface::getStatusCode.
+     * Tests ResponseInterface::code.
      *
      * @return void
      */
-    public function testGetStatusCodeMethod()
+    public function testCodeMethod()
     {
         $expected = 404;
 
-        $response = $this->response->withStatus($expected);
+        $response = $this->response->set('code', $expected);
 
-        $result = $response->getStatusCode();
+        $result = $response->code();
 
         $this->assertEquals($expected, $result);
     }
 
     /**
-     * Tests ResponseInterface::getReasonPhrase.
+     * Tests ResponseInterface::reason.
      *
      * @return void
      */
-    public function testGetReasonPhraseMethod()
+    public function testReasonMethod()
     {
         $expected = 'Proxy Authentication Required';
 
-        $response = $this->response->withStatus(407);
+        $response = $this->response->set('code', 407);
 
-        $result = $response->getReasonPhrase();
+        $result = $response->reason();
 
         $this->assertEquals($expected, $result);
     }
