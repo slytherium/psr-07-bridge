@@ -45,11 +45,13 @@ use Zapheus\Container\Container;
 use Zapheus\Http\Message\RequestInterface;
 use Zapheus\Http\MessageProvider;
 
+$interface = RequestInterface::class;
+
 $provider = new MessageProvider;
 
 $container = $provider->register(new Container);
 
-$zapheus = $container->get(RequestInterface::class);
+$zapheus = $container->get($interface);
 
 // Psr\Http\Message\ServerRequestInterface
 $request = new ServerRequest($zapheus);
