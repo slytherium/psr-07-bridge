@@ -24,56 +24,37 @@ use Psr\Http\Message\StreamInterface;
 class Stream implements StreamInterface
 {
     /**
-     * Resource modes.
-     *
-     * @var array
-     */
-    protected $modes = array(
-        /**
-         * A listing of readable modes.
-         *
-         * @var array
-         */
-        'readable' => array('r', 'r+', 'w+', 'a+', 'x+', 'c+', 'w+b'),
-
-        /**
-         * A listing of writable modes.
-         *
-         * @var array
-         */
-        'writable' => array('r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+', 'w+b'),
-    );
-
-    /**
-     * Underline stream.
-     *
-     * @var resource|null
-     */
-    protected $stream = null;
-
-    /**
-     * Size of file.
-     *
-     * @var integer|null
-     */
-    protected $size = null;
-
-    /**
-     * Metadata of file.
-     *
      * @var array|null
      */
     protected $meta = null;
 
     /**
+     * @var array
+     */
+    protected $readable = array('r', 'r+', 'w+', 'a+', 'x+', 'c+', 'w+b');
+
+    /**
+     * @var integer|null
+     */
+    protected $size = null;
+
+    /**
+     * @var resource|null
+     */
+    protected $stream = null;
+
+    /**
+     * @var array
+     */
+    protected $writable = array('r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+', 'w+b');
+
+    /**
      * Initializes the stream instance.
      *
-     * @param boolean|resource|null $stream
+     * @param resource|null $stream
      */
     public function __construct($stream = null)
     {
-        $stream === false && $stream = null;
-
         $this->stream = $stream;
     }
 
@@ -111,7 +92,9 @@ class Stream implements StreamInterface
         $stream = $this->stream;
 
         $this->meta = null;
+
         $this->size = null;
+
         $this->stream = null;
 
         return $stream;
@@ -183,11 +166,9 @@ class Stream implements StreamInterface
      */
     public function isReadable()
     {
-        $modes = $this->modes['readable'];
+        $mode = $this->metadata('mode');
 
-        $mode = $this->getMetadata('mode');
-
-        return in_array($mode, $modes);
+        return in_array($mode, $this->readable);
     }
 
     /**
@@ -207,11 +188,9 @@ class Stream implements StreamInterface
      */
     public function isWritable()
     {
-        $modes = $this->modes['writable'];
+        $mode = $this->metadata('mode');
 
-        $mode = $this->getMetadata('mode');
-
-        return in_array($mode, $modes);
+        return in_array($mode, $this->writable);
     }
 
     /**
