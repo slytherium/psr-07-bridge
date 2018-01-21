@@ -166,7 +166,7 @@ class Stream implements StreamInterface
      */
     public function isReadable()
     {
-        $mode = $this->metadata('mode');
+        $mode = $this->getMetadata('mode');
 
         return in_array($mode, $this->readable);
     }
@@ -188,7 +188,7 @@ class Stream implements StreamInterface
      */
     public function isWritable()
     {
-        $mode = $this->metadata('mode');
+        $mode = $this->getMetadata('mode');
 
         return in_array($mode, $this->writable);
     }
