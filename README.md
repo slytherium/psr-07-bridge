@@ -1,4 +1,4 @@
-# PSR-07 Bridge
+# PSR-07 (HTTP Message) Bridge
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE.md)
@@ -7,7 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-Converts [PSR-07](http://www.php-fig.org/psr/psr-7) messages to [Zapheus](https://github.com/zapheus/zapheus) HTTP messages and vice versa. Also contains an implementation of [PSR-07](http://www.php-fig.org/psr/psr-7).
+Converts [PSR-07](http://www.php-fig.org/psr/psr-7) packages to [Zapheus](https://github.com/zapheus/zapheus) HTTP messages and vice versa. Also contains an implementation of [PSR-07](http://www.php-fig.org/psr/psr-7).
 
 ## Install
 
@@ -41,13 +41,13 @@ $request = new Request($psr);
 
 ``` php
 use Zapheus\Bridge\Psr\Interop\ServerRequest;
+use Zapheus\Container\Container;
 use Zapheus\Http\Message\RequestInterface;
+use Zapheus\Http\MessageProvider;
 
-$container = new Zapheus\Container\Container;
+$provider = new MessageProvider;
 
-$provider = new Zapheus\Http\MessageProvider;
-
-$container = $provider->register($container);
+$container = $provider->register(new Container);
 
 $zapheus = $container->get(RequestInterface::class);
 
