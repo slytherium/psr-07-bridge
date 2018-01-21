@@ -45,7 +45,7 @@ class Stream implements StreamInterface
      */
     public function close()
     {
-        return $this->stream->close();
+        $this->stream->close();
     }
 
     /**

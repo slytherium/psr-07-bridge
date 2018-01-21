@@ -33,7 +33,7 @@ class UploadedFile implements UploadedFileInterface
     protected $size;
 
     /**
-     * @var integer|UPLOAD_ERR_OK
+     * @var integer
      */
     protected $error;
 
@@ -118,7 +118,11 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getStream()
     {
-        return new Stream(fopen($this->file, 'r'));
+        $stream = fopen($this->file, 'r');
+
+        $stream = $stream === false ? null : $stream;
+
+        return new Stream($stream);
     }
 
     /**

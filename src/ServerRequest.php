@@ -62,7 +62,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param array                                  $cookies
      * @param array                                  $query
      * @param array                                  $uploaded
-     * @param array|null                             $data
+     * @param array|null|object                      $data
      * @param array                                  $attributes
      * @param \Psr\Http\Message\UriInterface|null    $uri
      * @param \Psr\Http\Message\StreamInterface|null $body
@@ -121,7 +121,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * Retrieve any parameters provided in the request body.
      *
-     * @return null|array|object
+     * @return array|null|object
      */
     public function getParsedBody()
     {

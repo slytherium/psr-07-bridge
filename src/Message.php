@@ -24,7 +24,7 @@ use Psr\Http\Message\StreamInterface;
 class Message implements MessageInterface
 {
     /**
-     * @var \Zapheus\Http\Message\StreamInterface
+     * @var \Psr\Http\Message\StreamInterface
      */
     protected $body;
 
@@ -41,13 +41,17 @@ class Message implements MessageInterface
     /**
      * Initializes the message instance.
      *
-     * @param \Zapheus\Http\Message\StreamInterface|null $body
-     * @param array                                      $headers
-     * @param string                                     $version
+     * @param \Psr\Http\Message\StreamInterface|null $body
+     * @param array                                  $headers
+     * @param string                                 $version
      */
     public function __construct(StreamInterface $body = null, array $headers = array(), $version = '1.1')
     {
-        $default = new Stream(fopen('php://temp', 'r+'));
+        $resource = fopen('php://temp', 'r+');
+
+        $resource = $resource === false ? null : $resource;
+
+        $default = new Stream($resource);
 
         $this->body = $body === null ? $default : $body;
 
@@ -59,7 +63,7 @@ class Message implements MessageInterface
     /**
      * Returns the body of the message.
      *
-     * @return \Zapheus\Http\Message\StreamInterface
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getBody()
     {
@@ -142,7 +146,7 @@ class Message implements MessageInterface
      *
      * @throws \InvalidArgumentException
      *
-     * @param  \Zapheus\Http\Message\StreamInterface $body
+     * @param  \Psr\Http\Message\StreamInterface $body
      * @return static
      */
     public function withBody(StreamInterface $body)
