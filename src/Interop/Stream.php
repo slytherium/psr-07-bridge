@@ -2,8 +2,8 @@
 
 namespace Zapheus\Bridge\Psr\Interop;
 
-use Psr\Http\Message\StreamInterface as PsrStreamInterface;
-use Zapheus\Http\Message\StreamInterface;
+use Psr\Http\Message\StreamInterface;
+use Zapheus\Http\Message\StreamInterface as ZapheusStreamInterface;
 
 /**
  * Zapheus to PSR-07 Stream Bridge
@@ -11,7 +11,7 @@ use Zapheus\Http\Message\StreamInterface;
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class Stream implements PsrStreamInterface
+class Stream implements StreamInterface
 {
     /**
      * @var \Zapheus\Http\Message\StreamInterface
@@ -23,7 +23,7 @@ class Stream implements PsrStreamInterface
      *
      * @param \Zapheus\Http\Message\StreamInterface $stream
      */
-    public function __construct(StreamInterface $stream)
+    public function __construct(ZapheusStreamInterface $stream)
     {
         $this->stream = $stream;
     }

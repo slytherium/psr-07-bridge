@@ -2,9 +2,8 @@
 
 namespace Zapheus\Bridge\Psr\Zapheus;
 
-use Psr\Http\Message\StreamInterface;
-use Zapheus\Bridge\Psr\Interop\Stream as AbstractStream;
-use Zapheus\Http\Message\StreamInterface as ZapheusStreamInterface;
+use Psr\Http\Message\StreamInterface as PsrStreamInterface;
+use Zapheus\Http\Message\StreamInterface;
 
 /**
  * PSR-07 to Zapheus Stream Bridge
@@ -12,7 +11,7 @@ use Zapheus\Http\Message\StreamInterface as ZapheusStreamInterface;
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class Stream extends AbstractStream implements ZapheusStreamInterface
+class Stream implements StreamInterface
 {
     /**
      * @var \Psr\Http\Message\StreamInterface
@@ -24,9 +23,29 @@ class Stream extends AbstractStream implements ZapheusStreamInterface
      *
      * @param \Psr\Http\Message\StreamInterface $stream
      */
-    public function __construct(StreamInterface $stream)
+    public function __construct(PsrStreamInterface $stream)
     {
         $this->stream = $stream;
+    }
+
+    /**
+     * Reads all data from the stream into a string, from the beginning to end.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->stream->__toString();
+    }
+
+    /**
+     * Closes the stream and any underlying resources.
+     *
+     * @return void
+     */
+    public function close()
+    {
+        return $this->stream->close();
     }
 
     /**
@@ -42,6 +61,26 @@ class Stream extends AbstractStream implements ZapheusStreamInterface
     }
 
     /**
+     * Separates any underlying resources from the stream.
+     *
+     * @return resource|null
+     */
+    public function detach()
+    {
+        return $this->stream->detach();
+    }
+
+    /**
+     * Returns true if the stream is at the end of the stream.
+     *
+     * @return boolean
+     */
+    public function eof()
+    {
+        return $this->stream->eof();
+    }
+
+    /**
      * Get stream metadata as an associative array or retrieve a specific key.
      *
      * @param  string $key
@@ -53,13 +92,16 @@ class Stream extends AbstractStream implements ZapheusStreamInterface
     }
 
     /**
-     * Get the size of the stream if known.
+     * Read data from the stream.
      *
-     * @return integer|null
+     * @param  integer $length
+     * @return string
+     *
+     * @throws \RuntimeException
      */
-    public function size()
+    public function read($length)
     {
-        return $this->stream->getSize();
+        return $this->stream->read($length);
     }
 
     /**
@@ -73,6 +115,29 @@ class Stream extends AbstractStream implements ZapheusStreamInterface
     }
 
     /**
+     * Seek to the beginning of the stream.
+     *
+     * @throws \RuntimeException
+     */
+    public function rewind()
+    {
+        return $this->seek(0);
+    }
+
+    /**
+     * Seek to a position in the stream.
+     *
+     * @param integer $offset
+     * @param integer $whence
+     *
+     * @throws \RuntimeException
+     */
+    public function seek($offset, $whence = SEEK_SET)
+    {
+        return $this->stream->seek($offset, $whence);
+    }
+
+    /**
      * Returns whether or not the stream is seekable.
      *
      * @return boolean
@@ -83,6 +148,28 @@ class Stream extends AbstractStream implements ZapheusStreamInterface
     }
 
     /**
+     * Get the size of the stream if known.
+     *
+     * @return integer|null
+     */
+    public function size()
+    {
+        return $this->stream->getSize();
+    }
+
+    /**
+     * Returns the current position of the file read/write pointer.
+     *
+     * @return integer
+     *
+     * @throws \RuntimeException
+     */
+    public function tell()
+    {
+        return $this->stream->tell();
+    }
+
+    /**
      * Returns whether or not the stream is writable.
      *
      * @return boolean
@@ -90,5 +177,18 @@ class Stream extends AbstractStream implements ZapheusStreamInterface
     public function writable()
     {
         return $this->stream->isWritable();
+    }
+
+    /**
+     * Write data to the stream.
+     *
+     * @param  string $string
+     * @return integer
+     *
+     * @throws \RuntimeException
+     */
+    public function write($string)
+    {
+        return $this->stream->write($string);
     }
 }
