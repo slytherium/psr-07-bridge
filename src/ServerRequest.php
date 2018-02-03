@@ -63,9 +63,11 @@ class ServerRequest extends Request implements ServerRequestInterface
     {
         $uri = $uri === null ? Uri::instance($server) : $uri;
 
+        isset($uploaded[0]) || $uploaded = UploadedFile::normalize($uploaded);
+
         $method = $server['REQUEST_METHOD'];
 
-        $target = $server['REQUEST_URI'];
+        $target = (string) $server['REQUEST_URI'];
 
         parent::__construct($method, $target, $uri, $body, $headers, $version);
 
@@ -77,7 +79,7 @@ class ServerRequest extends Request implements ServerRequestInterface
 
         $this->server = $server;
 
-        $this->uploaded = UploadedFile::normalize($uploaded);
+        $this->uploaded = $uploaded;
     }
 
     /**

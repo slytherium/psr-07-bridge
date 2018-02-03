@@ -142,15 +142,17 @@ class UploadedFile implements UploadedFileInterface
      */
     public static function normalize(array $uploaded, $files = array())
     {
-        foreach ((array) $uploaded as $name => $file) {
+        foreach (self::diverse($uploaded) as $name => $file) {
             list($files[$name], $items) = array($file, array());
 
             if (isset($file['name']) === true) {
                 foreach ($file['name'] as $key => $value) {
-                    $items[] = self::create($file, $key);
+                    $instance = self::create($file, $key);
+
+                    array_push($items, $instance);
                 }
 
-                $files[$name] = $items;
+                $files[$name] = (array) $items;
             }
         }
 
@@ -177,5 +179,26 @@ class UploadedFile implements UploadedFileInterface
         $type = $file['type'][$key];
 
         return new UploadedFile($tmp, $size, $error, $original, $type);
+    }
+
+    /**
+     * Diverse the $_FILES into a consistent result.
+     *
+     * @param  array $uploaded
+     * @return array
+     */
+    protected static function diverse(array $uploaded)
+    {
+        $result = array();
+
+        foreach ($uploaded as $file => $item) {
+            foreach ($item as $key => $value) {
+                $diversed = (array) $value;
+
+                $result[$file][$key] = $diversed;
+            }
+        }
+
+        return $result;
     }
 }
