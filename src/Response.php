@@ -138,6 +138,8 @@ class Response extends Message implements ResponseInterface
      */
     public function withStatus($code, $reason = '')
     {
+        // TODO: Add \InvalidArgumentException
+
         $static = clone $this;
 
         $static->code = $code;

@@ -193,6 +193,8 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withParsedBody($data)
     {
+        // TODO: Add \InvalidArgumentException
+
         $static = clone $this;
 
         $static->data = $data;
@@ -225,6 +227,8 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withUploadedFiles(array $uploaded)
     {
+        // TODO: Add \InvalidArgumentException
+
         $static = clone $this;
 
         $static->uploaded = $uploaded;

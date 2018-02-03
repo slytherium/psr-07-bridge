@@ -20,19 +20,19 @@ class Request extends ZapheusRequest
      */
     public function __construct(ServerRequestInterface $request)
     {
-        $server = $request->getServerParams();
+        $server = (array) $request->getServerParams();
 
-        $cookies = $request->getCookieParams();
+        $cookies = (array) $request->getCookieParams();
 
         list($queries, $files) = $this->globals($request);
 
-        $data = $request->getParsedBody() ?: array();
+        $data = (array) $request->getParsedBody();
 
         parent::__construct($server, $cookies, $data, $files, $queries);
 
         $this->set('attributes', $request->getAttributes());
 
-        $this->set('headers', $request->getHeaders());
+        $this->set('headers', (array) $request->getHeaders());
 
         $this->set('uri', new Uri($request->getUri()));
 
@@ -58,8 +58,8 @@ class Request extends ZapheusRequest
 
             foreach ((array) $files as $file) {
                 $item = new File($file);
-                
-                array_push($uploaded[$key], $item);
+
+                $uploaded[$key][] = $item;
             }
         }
    

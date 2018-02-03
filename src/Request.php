@@ -90,6 +90,8 @@ class Request extends Message implements RequestInterface
      */
     public function withMethod($method)
     {
+        // TODO: Add \InvalidArgumentException
+
         $static = clone $this;
 
         $static->method = $method;

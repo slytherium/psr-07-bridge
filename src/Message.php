@@ -40,7 +40,9 @@ class Message implements MessageInterface
         if ($body === null) {
             $resource = fopen('php://temp', 'r+');
 
-            $body = new Stream($resource ?: null);
+            $resource = $resource === false ? null : $resource;
+
+            $body = new Stream($resource);
         }
 
         $this->body = $body;
@@ -124,6 +126,8 @@ class Message implements MessageInterface
      */
     public function withAddedHeader($name, $value)
     {
+        // TODO: Add \InvalidArgumentException
+
         $static = clone $this;
 
         $static->headers[$name][] = $value;
@@ -159,6 +163,8 @@ class Message implements MessageInterface
      */
     public function withHeader($name, $value)
     {
+        // TODO: Add \InvalidArgumentException
+
         $static = clone $this;
 
         $static->headers[$name] = (array) $value;

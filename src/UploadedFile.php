@@ -108,9 +108,13 @@ class UploadedFile implements UploadedFileInterface
      */
     public function getStream()
     {
-        $stream = fopen($this->file, 'r');
+        // TODO: Add \RuntimeException
 
-        return new Stream($stream ?: null);
+        $stream = fopen($this->file, 'r+');
+
+        $stream = $stream === false ? null : $stream;
+
+        return new Stream($stream);
     }
 
     /**
@@ -123,6 +127,9 @@ class UploadedFile implements UploadedFileInterface
      */
     public function moveTo($target)
     {
+        // TODO: Add \InvalidArgumentException
+        // TODO: Add \RuntimeException
+
         rename($this->file, $target);
     }
 
