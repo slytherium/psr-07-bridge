@@ -2,22 +2,12 @@
 
 namespace Zapheus\Bridge\Psr;
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use Psr\Http\Message\UriInterface;
 
 /**
  * URI
  *
  * @package Zapheus
- * @author  Kévin Dunglas <dunglas@gmail.com>
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
 class Uri implements UriInterface
@@ -63,6 +53,8 @@ class Uri implements UriInterface
     protected $user = '';
 
     /**
+     * Initializes the URI instance.
+     *
      * @param string $uri
      */
     public function __construct($uri = '')
@@ -75,7 +67,7 @@ class Uri implements UriInterface
             $this->$key = $value;
         }
 
-        $this->uri = $uri;
+        $this->uri = (string) $uri;
     }
 
     /**
@@ -300,5 +292,25 @@ class Uri implements UriInterface
         $new->user = $user . ':' . $password;
 
         return $new;
+    }
+
+    /**
+     * Generates a \Psr\Http\Message\UriInterface from server variables.
+     *
+     * @param  array                               $server
+     * @param  \Psr\Http\Message\UriInterface|null $uri
+     * @return \Psr\Http\Message\UriInterface
+     */
+    public static function instance(array $server)
+    {
+        $secure = isset($server['HTTPS']) ? $server['HTTPS'] : 'off';
+
+        $http = $secure === 'off' ? 'http' : 'https';
+
+        $url = $http . '://' . $server['SERVER_NAME'];
+
+        $url .= (string) $server['SERVER_PORT'];
+
+        return new Uri($url . $server['REQUEST_URI']);
     }
 }

@@ -3,7 +3,6 @@
 namespace Zapheus\Bridge\Psr\Zapheus;
 
 use Psr\Http\Message\ServerRequestInterface;
-use Zapheus\Http\Message\Collection;
 use Zapheus\Http\Message\Request as ZapheusRequest;
 
 /**
@@ -25,25 +24,25 @@ class Request extends ZapheusRequest
 
         $cookies = $request->getCookieParams();
 
-        list($query, $files) = $this->globals($request);
+        list($queries, $files) = $this->globals($request);
 
-        $data = $request->getParsedBody();
+        $data = $request->getParsedBody() ?: array();
 
-        $attributes = $request->getAttributes();
+        parent::__construct($server, $cookies, $data, $files, $queries);
 
-        parent::__construct($server, $cookies, $data, $files, $query, $attributes);
+        $this->set('attributes', $request->getAttributes());
 
-        $this->set('headers', new Collection($request->getHeaders()), true);
+        $this->set('headers', $request->getHeaders());
 
-        $this->set('uri', new Uri($request->getUri()), true);
+        $this->set('uri', new Uri($request->getUri()));
 
-        $this->set('stream', new Stream($request->getBody()), true);
+        $this->set('stream', new Stream($request->getBody()));
 
-        $this->set('version', $request->getProtocolVersion(), true);
+        $this->set('version', $request->getProtocolVersion());
     }
 
     /**
-     * Returns a listing of globals.
+     * Returns an array of globals.
      *
      * @param  \Psr\Http\Message\ServerRequestInterface $request
      * @return array

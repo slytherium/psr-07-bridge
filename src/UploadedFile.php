@@ -2,22 +2,12 @@
 
 namespace Zapheus\Bridge\Psr;
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use Psr\Http\Message\UploadedFileInterface;
 
 /**
  * Uploaded File
  *
  * @package Zapheus
- * @author  Kévin Dunglas <dunglas@gmail.com>
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
 class UploadedFile implements UploadedFileInterface
@@ -112,7 +102,7 @@ class UploadedFile implements UploadedFileInterface
     /**
      * Retrieves a stream representing the uploaded file.
      *
-     * @return \Zapheus\Http\Message\StreamInterface
+     * @return \Psr\Http\Message\StreamInterface
      *
      * @throws \RuntimeException
      */
@@ -120,9 +110,7 @@ class UploadedFile implements UploadedFileInterface
     {
         $stream = fopen($this->file, 'r');
 
-        $stream = $stream === false ? null : $stream;
-
-        return new Stream($stream);
+        return new Stream($stream ?: null);
     }
 
     /**
@@ -136,5 +124,51 @@ class UploadedFile implements UploadedFileInterface
     public function moveTo($target)
     {
         rename($this->file, $target);
+    }
+
+    /**
+     * Parses the $_FILES into multiple \File instances.
+     *
+     * @param  array $uploaded
+     * @param  array $files
+     * @return \Zapheus\Http\Message\FileInterface[]
+     */
+    public static function normalize(array $uploaded, $files = array())
+    {
+        foreach ((array) $uploaded as $name => $file) {
+            list($files[$name], $items) = array($file, array());
+
+            if (isset($file['name']) === true) {
+                foreach ($file['name'] as $key => $value) {
+                    $items[] = self::create($file, $key);
+                }
+
+                $files[$name] = $items;
+            }
+        }
+
+        return $files;
+    }
+
+    /**
+     * Creates a new UploadedFile instance.
+     *
+     * @param  array   $file
+     * @param  integer $key
+     * @return \Psr\Http\Message\UploadedFile
+     */
+    protected static function create(array $file, $key)
+    {
+        $tmp = $file['tmp_name'][$key];
+
+        $size = $file['size'][$key];
+
+        $error = $file['error'][$key];
+
+        $original = $file['name'][$key];
+
+        $type = $file['type'][$key];
+
+        return new UploadedFile($tmp, $size, $error, $original, $type);
     }
 }

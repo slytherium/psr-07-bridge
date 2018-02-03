@@ -2,23 +2,12 @@
 
 namespace Zapheus\Bridge\Psr;
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use Psr\Http\Message\StreamInterface;
 
 /**
  * Stream
  *
  * @package Zapheus
- * @author  Kévin Dunglas <dunglas@gmail.com>
- * @author  Jérémy 'Jejem' Desvages <jejem@phyrexia.org>
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
 class Stream implements StreamInterface

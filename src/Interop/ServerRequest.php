@@ -20,27 +20,27 @@ class ServerRequest extends PsrServerRequest
      */
     public function __construct(RequestInterface $request)
     {
-        $server = $request->server()->all();
+        $server = $request->server();
 
-        $cookies = $request->cookies()->all();
+        $cookies = $request->cookies();
 
-        list($query, $files) = $this->globals($request);
+        list($queries, $files) = $this->globals($request);
 
         $data = $request->data();
 
-        $attributes = $request->attributes()->all();
+        $attributes = $request->attributes();
 
         list($uri, $body) = $this->request($request);
 
-        $headers = $request->headers()->all();
+        $headers = $request->headers();
 
         $version = $request->version();
 
-        parent::__construct($server, $cookies, $query, $files, $data, $attributes, $uri, $body, $headers, $version);
+        parent::__construct($server, $cookies, $queries, $files, $data, $attributes, $uri, $body, $headers, $version);
     }
 
     /**
-     * Returns a listing of globals.
+     * Returns an array of global variables.
      *
      * @param  \Zapheus\Http\Message\RequestInterface $request
      * @return array
@@ -50,7 +50,7 @@ class ServerRequest extends PsrServerRequest
         list($items, $uploaded) = array($request->files(), array());
 
         foreach ((array) $items as $key => $files) {
-            $uploaded[$key] = array();
+            $uploaded[(string) $key] = array();
 
             foreach ((array) $files as $file) {
                 $item = new UploadedFile($file);
@@ -59,11 +59,11 @@ class ServerRequest extends PsrServerRequest
             }
         }
    
-        return array($request->query()->all(), $uploaded);
+        return array($request->queries(), $uploaded);
     }
 
     /**
-     * Returns a listing of request variables.
+     * Returns an array of request variables.
      *
      * @param  \Zapheus\Http\Message\RequestInterface $request
      * @return array
@@ -72,6 +72,8 @@ class ServerRequest extends PsrServerRequest
     {
         $uri = new Uri($request->uri());
 
-        return array($uri, new Stream($request->stream()));
+        $stream = new Stream($request->stream());
+
+        return array($uri, $stream);
     }
 }

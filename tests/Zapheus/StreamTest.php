@@ -55,26 +55,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests StreamInterface::eof.
-     *
-     * @return void
-     */
-    public function testEofMethod()
-    {
-        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
-
-        $resource = fopen($file, 'w');
-
-        $stream = new Stream(new PsrStream($resource));
-
-        $expected = false;
-
-        $result = $stream->eof();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
      * Tests StreamInterface::contents with \RuntimeException.
      *
      * @return void
@@ -90,85 +70,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $stream = new Stream(new PsrStream($resource));
 
         $stream->contents();
-    }
-
-    /**
-     * Tests StreamInterface::metadata.
-     *
-     * @return void
-     */
-    public function testMetadataMethod()
-    {
-        $expected = array('eof' => false);
-
-        $expected['timed_out'] = null;
-        $expected['blocked'] = 1;
-        $expected['wrapper_type'] = 'plainfile';
-        $expected['stream_type'] = 'STDIO';
-        $expected['mode'] = 'r';
-        $expected['unread_bytes'] = 0;
-        $expected['seekable'] = 1;
-        $expected['uri'] = __DIR__ . '/../Fixture/Views/LoremIpsum.php';
-
-        $result = $this->stream->metadata();
-
-        $this->assertEquals($expected['uri'], $result['uri']);
-    }
-
-    /**
-     * Tests StreamInterface::size.
-     *
-     * @return void
-     */
-    public function testSizeMethod()
-    {
-        $expected = 26;
-
-        $result = $this->stream->size();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests StreamInterface::isReadable.
-     *
-     * @return void
-     */
-    public function testReadableMethod()
-    {
-        $expected = $this->psr->isReadable();
-
-        $result = $this->stream->readable();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests StreamInterface::isSeekable.
-     *
-     * @return void
-     */
-    public function testSeekableMethod()
-    {
-        $expected = $this->psr->isSeekable();
-
-        $result = $this->stream->seekable();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests StreamInterface::isWritable.
-     *
-     * @return void
-     */
-    public function testWritableMethod()
-    {
-        $expected = $this->psr->isWritable();
-
-        $result = $this->stream->writable();
-
-        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -220,68 +121,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $result = $this->stream->contents();
 
         $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests StreamInterface::seek and StreamInterface::tell.
-     *
-     * @return void
-     */
-    public function testSeekMethodAndTellMethod()
-    {
-        $expected = 2;
-
-        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
-
-        $resource = fopen($file, 'w');
-
-        $stream = new Stream(new PsrStream($resource));
-
-        $stream->seek($expected);
-
-        $result = $stream->tell();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests StreamInterface::seek and StreamInterface::detach.
-     *
-     * @return void
-     */
-    public function testSeekMethodAndDetachMethod()
-    {
-        $this->setExpectedException('RuntimeException');
-
-        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
-
-        $resource = fopen($file, 'w');
-
-        $stream = new Stream(new PsrStream($resource));
-
-        $stream->detach();
-
-        $stream->seek(2);
-    }
-
-    /**
-     * Tests StreamInterface::tell and StreamInterface::detach.
-     *
-     * @return void
-     */
-    public function testTellMethodAndDetachMethod()
-    {
-        $this->setExpectedException('RuntimeException');
-
-        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
-
-        $resource = fopen($file, 'w');
-
-        $stream = new Stream(new PsrStream($resource));
-
-        $stream->detach();
-
-        $stream->tell();
     }
 
     /**

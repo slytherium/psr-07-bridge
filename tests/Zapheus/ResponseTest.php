@@ -38,7 +38,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 404;
 
-        $response = $this->response->set('code', $expected);
+        $response = $this->response->with('code', $expected);
 
         $result = $response->code();
 
@@ -54,7 +54,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 'Proxy Authentication Required';
 
-        $response = $this->response->set('code', 407);
+        $response = $this->response->with('code', 407);
 
         $result = $response->reason();
 

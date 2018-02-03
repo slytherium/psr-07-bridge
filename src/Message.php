@@ -2,15 +2,6 @@
 
 namespace Zapheus\Bridge\Psr;
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -18,7 +9,6 @@ use Psr\Http\Message\StreamInterface;
  * Message
  *
  * @package Zapheus
- * @author  Kévin Dunglas <dunglas@gmail.com>
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
 class Message implements MessageInterface
@@ -47,13 +37,13 @@ class Message implements MessageInterface
      */
     public function __construct(StreamInterface $body = null, array $headers = array(), $version = '1.1')
     {
-        $resource = fopen('php://temp', 'r+');
+        if ($body === null) {
+            $resource = fopen('php://temp', 'r+');
 
-        $resource = $resource === false ? null : $resource;
+            $body = new Stream($resource ?: null);
+        }
 
-        $default = new Stream($resource);
-
-        $this->body = $body === null ? $default : $body;
+        $this->body = $body;
 
         $this->headers = $headers;
 
@@ -126,54 +116,54 @@ class Message implements MessageInterface
     /**
      * Returns an instance with the specified header appended with the given value.
      *
-     * @throws \InvalidArgumentException
-     *
      * @param  string          $name
      * @param  string|string[] $value
      * @return static
+     *
+     * @throws \InvalidArgumentException
      */
     public function withAddedHeader($name, $value)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->headers[$name][] = $value;
+        $static->headers[$name][] = $value;
 
-        return $new;
+        return $static;
     }
 
     /**
      * Returns an instance with the specified message body.
      *
-     * @throws \InvalidArgumentException
-     *
      * @param  \Psr\Http\Message\StreamInterface $body
      * @return static
+     *
+     * @throws \InvalidArgumentException
      */
     public function withBody(StreamInterface $body)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->body = $body;
+        $static->body = $body;
 
-        return $new;
+        return $static;
     }
 
     /**
      * Returns an instance with the provided value replacing the specified header.
      *
-     * @throws \InvalidArgumentException
-     *
      * @param  string          $name
      * @param  string|string[] $value
      * @return static
+     *
+     * @throws \InvalidArgumentException
      */
     public function withHeader($name, $value)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->headers[$name] = is_array($value) ? $value : array($value);
+        $static->headers[$name] = (array) $value;
 
-        return $new;
+        return $static;
     }
 
     /**
@@ -184,11 +174,11 @@ class Message implements MessageInterface
      */
     public function withProtocolVersion($version)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->version = $version;
+        $static->version = $version;
 
-        return $new;
+        return $static;
     }
 
     /**
@@ -202,11 +192,11 @@ class Message implements MessageInterface
         $instance = clone $this;
 
         if ($this->hasHeader($name)) {
-            $new = clone $this;
+            $static = clone $this;
 
-            unset($new->headers[$name]);
+            unset($static->headers[$name]);
 
-            $instance = $new;
+            $instance = $static;
         }
 
         return $instance;

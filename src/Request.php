@@ -2,15 +2,6 @@
 
 namespace Zapheus\Bridge\Psr;
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
@@ -99,11 +90,11 @@ class Request extends Message implements RequestInterface
      */
     public function withMethod($method)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->method = $method;
+        $static->method = $method;
 
-        return $new;
+        return $static;
     }
 
     /**
@@ -114,11 +105,11 @@ class Request extends Message implements RequestInterface
      */
     public function withRequestTarget($target)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->target = $target;
+        $static->target = $target;
 
-        return $new;
+        return $static;
     }
 
     /**
@@ -130,18 +121,18 @@ class Request extends Message implements RequestInterface
      */
     public function withUri(UriInterface $uri, $preserve = false)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->uri = $uri;
+        $static->uri = $uri;
 
         if (! $preserve && $host = $uri->getHost()) {
             $port = $host . ':' . $uri->getPort();
 
             $host = $uri->getPort() ? $port : $host;
 
-            $new->headers['Host'] = array($host);
+            $static->headers['Host'] = (array) $host;
         }
 
-        return $new;
+        return $static;
     }
 }

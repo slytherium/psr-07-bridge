@@ -42,15 +42,17 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
         $_SERVER['SERVER_NAME'] = 'rougin.github.io';
         $_SERVER['SERVER_PORT'] = 8000;
 
+        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
+
         $_FILES['file']['error'] = array(0);
-        $_FILES['file']['name'] = array('test.txt');
-        $_FILES['file']['size'] = array(100);
-        $_FILES['file']['tmp_name'] = array('/tmp/test.txt');
-        $_FILES['file']['type'] = array('text/plain');
+        $_FILES['file']['name'] = array(basename($file));
+        $_FILES['file']['size'] = array(filesize($file));
+        $_FILES['file']['tmp_name'] = array($file);
+        $_FILES['file']['type'] = array(mime_content_type($file));
 
         $request = new ZapheusRequest($_SERVER, array(), array(), $_FILES);
 
-        $this->server = $request->server()->all();
+        $this->server = $request->server();
 
         $this->request = new ServerRequest($request);
     }

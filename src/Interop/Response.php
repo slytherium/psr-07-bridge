@@ -14,7 +14,7 @@ use Zapheus\Http\Message\ResponseInterface;
 class Response extends PsrResponse
 {
     /**
-     * Initializes the server request instance.
+     * Initializes the response instance.
      *
      * @param \Zapheus\Http\Message\ResponseInterface $response
      */
@@ -22,11 +22,11 @@ class Response extends PsrResponse
     {
         $body = new Stream($response->stream());
 
-        $code = $response->code();
+        $code = (integer) $response->code();
 
         $version = $response->version();
 
-        $headers = $response->headers()->all();
+        $headers = $response->headers();
 
         parent::__construct($code, $body, $headers, $version);
     }

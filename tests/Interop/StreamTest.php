@@ -130,48 +130,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests StreamInterface::isReadable.
-     *
-     * @return void
-     */
-    public function testIsReadableMethod()
-    {
-        $expected = $this->zapheus->readable();
-
-        $result = $this->stream->isReadable();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests StreamInterface::isSeekable.
-     *
-     * @return void
-     */
-    public function testIsSeekableMethod()
-    {
-        $expected = $this->zapheus->seekable();
-
-        $result = $this->stream->isSeekable();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests StreamInterface::isWritable.
-     *
-     * @return void
-     */
-    public function testIsWritableMethod()
-    {
-        $expected = $this->zapheus->writable();
-
-        $result = $this->stream->isWritable();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
      * Tests StreamInterface::read.
      *
      * @return void

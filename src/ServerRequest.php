@@ -2,15 +2,6 @@
 
 namespace Zapheus\Bridge\Psr;
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -20,7 +11,6 @@ use Psr\Http\Message\UriInterface;
  * Server Request
  *
  * @package Zapheus
- * @author  Kévin Dunglas <dunglas@gmail.com>
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
 class ServerRequest extends Request implements ServerRequestInterface
@@ -28,22 +18,12 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * @var array
      */
-    protected $server = array();
+    protected $attributes = array();
 
     /**
      * @var array
      */
     protected $cookies = array();
-
-    /**
-     * @var array
-     */
-    protected $query = array();
-
-    /**
-     * @var array
-     */
-    protected $uploaded = array();
 
     /**
      * @var array|null|object
@@ -53,7 +33,17 @@ class ServerRequest extends Request implements ServerRequestInterface
     /**
      * @var array
      */
-    protected $attributes = array();
+    protected $query = array();
+
+    /**
+     * @var array
+     */
+    protected $server = array();
+
+    /**
+     * @var array
+     */
+    protected $uploaded = array();
 
     /**
      * Initializes the server request instance.
@@ -71,9 +61,13 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function __construct(array $server, array $cookies = array(), array $query = array(), array $uploaded = array(), $data = null, array $attributes = array(), UriInterface $uri = null, StreamInterface $body = null, array $headers = array(), $version = '1.1')
     {
-        $uri = $this->uri($server, $uri);
+        $uri = $uri === null ? Uri::instance($server) : $uri;
 
-        parent::__construct($server['REQUEST_METHOD'], $server['REQUEST_URI'], $uri, $body, $headers, $version);
+        $method = $server['REQUEST_METHOD'];
+
+        $target = $server['REQUEST_URI'];
+
+        parent::__construct($method, $target, $uri, $body, $headers, $version);
 
         $this->cookies = $cookies;
 
@@ -83,7 +77,7 @@ class ServerRequest extends Request implements ServerRequestInterface
 
         $this->server = $server;
 
-        $this->uploaded = $this->files($uploaded);
+        $this->uploaded = UploadedFile::normalize($uploaded);
     }
 
     /**
@@ -167,11 +161,11 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withAttribute($name, $value)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->attributes[$name] = $value;
+        $static->attributes[$name] = $value;
 
-        return $new;
+        return $static;
     }
 
     /**
@@ -182,11 +176,11 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withCookieParams(array $cookies)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->cookies = $cookies;
+        $static->cookies = $cookies;
 
-        return $new;
+        return $static;
     }
 
     /**
@@ -199,11 +193,11 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withParsedBody($data)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->data = $data;
+        $static->data = $data;
 
-        return $new;
+        return $static;
     }
 
     /**
@@ -214,11 +208,11 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withQueryParams(array $query)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->query = $query;
+        $static->query = $query;
 
-        return $new;
+        return $static;
     }
 
     /**
@@ -231,11 +225,11 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withUploadedFiles(array $uploaded)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->uploaded = $uploaded;
+        $static->uploaded = $uploaded;
 
-        return $new;
+        return $static;
     }
 
     /**
@@ -246,101 +240,10 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function withoutAttribute($name)
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        unset($new->attributes[$name]);
+        unset($static->attributes[$name]);
 
-        return $new;
-    }
-
-    /**
-     * Converts each value as array.
-     *
-     * @param  array $item
-     * @return array
-     */
-    protected function arrayify(array $item)
-    {
-        $array = array();
-
-        foreach ($item as $key => $value) {
-            $new = (array) array($value);
-
-            isset($item['name']) && $value = $new;
-
-            $array[$key] = $value;
-        }
-
-        return $array;
-    }
-
-    /**
-     * Converts the data from $_FILES to multiple \UploadInterface instances.
-     *
-     * @param  array $file
-     * @param  array $current
-     * @return array
-     */
-    protected function convert($file, $current)
-    {
-        list($count, $items) = array(count($file['name']), array());
-
-        for ($i = 0; $i < (integer) $count; $i++) {
-            foreach (array_keys($current) as $key) {
-                $file[$i][$key] = $current[$key][$i];
-            }
-
-            $error = $file[$i]['error'];
-            $original = $file[$i]['name'];
-            $size = $file[$i]['size'];
-            $tmp = $file[$i]['tmp_name'];
-            $type = $file[$i]['type'];
-
-            $items[$i] = new UploadedFile($tmp, $size, $error, $original, $type);
-        }
-
-        return $items;
-    }
-
-    /**
-     * Parses the $_FILES into multiple \UploadedFileInterface instances.
-     *
-     * @param  array $uploaded
-     * @param  array $files
-     * @return \Psr\Http\Message\UploadedFileInterface[]
-     */
-    protected function files(array $uploaded, $files = array())
-    {
-        foreach ((array) $uploaded as $name => $file) {
-            $array = $this->arrayify($file);
-
-            $files[$name] = array();
-
-            isset($file[0]) || $file = $this->convert($file, $array);
-
-            $files[$name] = $file;
-        }
-
-        return $files;
-    }
-
-    /**
-     * Generates a \Psr\Http\Message\UriInterface if it does not exists.
-     *
-     * @param  array                               $server
-     * @param  \Psr\Http\Message\UriInterface|null $uri
-     * @return \Psr\Http\Message\UriInterface
-     */
-    protected function uri(array $server, $uri = null)
-    {
-        $secure = isset($server['HTTPS']) ? $server['HTTPS'] : 'off';
-
-        $http = $secure === 'off' ? 'http' : 'https';
-
-        $url = $http . '://' . $server['SERVER_NAME'];
-
-        $url .= $server['SERVER_PORT'] . $server['REQUEST_URI'];
-
-        return $uri === null ? new Uri($url) : $uri;
+        return $static;
     }
 }

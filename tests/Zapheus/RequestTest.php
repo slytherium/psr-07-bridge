@@ -42,11 +42,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $_SERVER['SERVER_NAME'] = 'rougin.github.io';
         $_SERVER['SERVER_PORT'] = 8000;
 
+        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
+
         $_FILES['file']['error'] = array(0);
-        $_FILES['file']['name'] = array('test.txt');
-        $_FILES['file']['size'] = array(100);
-        $_FILES['file']['tmp_name'] = array('/tmp/test.txt');
-        $_FILES['file']['type'] = array('text/plain');
+        $_FILES['file']['name'] = array(basename($file));
+        $_FILES['file']['size'] = array(filesize($file));
+        $_FILES['file']['tmp_name'] = array($file);
+        $_FILES['file']['type'] = array(mime_content_type($file));
 
         $request = new ServerRequest($_SERVER, array(), array(), $_FILES);
 
@@ -64,7 +66,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array('name' => 'Rougin Royce');
 
-        $request = $this->request->set('attributes', $expected);
+        $request = $this->request->with('attributes', $expected);
 
         $result = $request->attributes();
 
@@ -80,15 +82,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array('name' => 'Rougin', 'address' => 'Tomorrowland');
 
-        $cookies = $this->request->cookies();
+        $request = $this->request->with('cookies', $expected);
 
-        $cookies->set('address', 'Tomorrowland');
-
-        $cookies->set('name', 'Rougin');
-
-        $request = $this->request->set('cookies', $cookies);
-
-        $result = $request->cookies()->all();
+        $result = $request->cookies();
 
         $this->assertEquals($expected, $result);
     }
@@ -102,7 +98,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array('name' => 'Rougin Royce', 'age' => 20);
 
-        $request = $this->request->set('data', $expected);
+        $request = $this->request->with('data', $expected);
 
         $result = $request->data();
 
@@ -116,11 +112,13 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testFilesMethod()
     {
-        $file = new File('/test.txt', 0, 0, 'test.txt', 'text/plain');
+        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
+
+        $file = new File($file, basename($file));
 
         $expected = array($file);
 
-        $request = $this->request->set('files', $expected);
+        $request = $this->request->with('files', $expected);
 
         $result = $request->files();
 
@@ -136,7 +134,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 'POST';
 
-        $request = $this->request->set('method', $expected);
+        $request = $this->request->with('method', $expected);
 
         $result = $request->method();
 
@@ -144,23 +142,17 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests RequestInterface::query.
+     * Tests RequestInterface::queries.
      *
      * @return void
      */
-    public function testQueryMethod()
+    public function testQueriesMethod()
     {
         $expected = array('name' => 'Rougin Royce', 'age' => 20);
 
-        $query = $this->request->query();
+        $request = $this->request->with('queries', $expected);
 
-        $query->set('name', 'Rougin Royce');
-
-        $query->set('age', 20);
-
-        $request = $this->request->set('query', $query);
-
-        $result = $request->query()->all();
+        $result = $request->queries();
 
         $this->assertEquals($expected, $result);
     }
@@ -172,7 +164,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testServerMethod()
     {
-        $result = $this->request->server()->all();
+        $result = $this->request->server();
 
         $expected = $_SERVER;
 
@@ -188,7 +180,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 'origin-form';
 
-        $request = $this->request->set('target', $expected);
+        $request = $this->request->with('target', $expected);
 
         $result = $request->target();
 
@@ -204,7 +196,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new Uri('https://rougin.github.io');
 
-        $request = $this->request->set('uri', $expected);
+        $request = $this->request->with('uri', $expected);
 
         $result = $request->uri();
 

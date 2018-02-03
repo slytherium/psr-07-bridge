@@ -49,7 +49,7 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Returns the remaining contents in a string
+     * Returns the remaining contents in a string.
      *
      * @return string
      *
@@ -58,37 +58,6 @@ class Stream implements StreamInterface
     public function contents()
     {
         return $this->stream->getContents();
-    }
-
-    /**
-     * Separates any underlying resources from the stream.
-     *
-     * @return resource|null
-     */
-    public function detach()
-    {
-        return $this->stream->detach();
-    }
-
-    /**
-     * Returns true if the stream is at the end of the stream.
-     *
-     * @return boolean
-     */
-    public function eof()
-    {
-        return $this->stream->eof();
-    }
-
-    /**
-     * Get stream metadata as an associative array or retrieve a specific key.
-     *
-     * @param  string $key
-     * @return array|mixed|null
-     */
-    public function metadata($key = null)
-    {
-        return $this->stream->getMetadata($key);
     }
 
     /**
@@ -105,78 +74,13 @@ class Stream implements StreamInterface
     }
 
     /**
-     * Returns whether or not the stream is readable.
-     *
-     * @return boolean
-     */
-    public function readable()
-    {
-        return $this->stream->isReadable();
-    }
-
-    /**
      * Seek to the beginning of the stream.
      *
      * @throws \RuntimeException
      */
     public function rewind()
     {
-        return $this->seek(0);
-    }
-
-    /**
-     * Seek to a position in the stream.
-     *
-     * @param integer $offset
-     * @param integer $whence
-     *
-     * @throws \RuntimeException
-     */
-    public function seek($offset, $whence = SEEK_SET)
-    {
-        return $this->stream->seek($offset, $whence);
-    }
-
-    /**
-     * Returns whether or not the stream is seekable.
-     *
-     * @return boolean
-     */
-    public function seekable()
-    {
-        return $this->stream->isSeekable();
-    }
-
-    /**
-     * Get the size of the stream if known.
-     *
-     * @return integer|null
-     */
-    public function size()
-    {
-        return $this->stream->getSize();
-    }
-
-    /**
-     * Returns the current position of the file read/write pointer.
-     *
-     * @return integer
-     *
-     * @throws \RuntimeException
-     */
-    public function tell()
-    {
-        return $this->stream->tell();
-    }
-
-    /**
-     * Returns whether or not the stream is writable.
-     *
-     * @return boolean
-     */
-    public function writable()
-    {
-        return $this->stream->isWritable();
+        return $this->stream->rewind();
     }
 
     /**

@@ -2,15 +2,6 @@
 
 namespace Zapheus\Bridge\Psr;
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -31,11 +22,9 @@ class Response extends Message implements ResponseInterface
      * @var array
      */
     protected $codes = array(
-        // Informational 1xx
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',
-        // Successful 2xx
         200 => 'OK',
         201 => 'Created',
         202 => 'Accepted',
@@ -46,7 +35,6 @@ class Response extends Message implements ResponseInterface
         207 => 'Multi Status',
         208 => 'Already Reported',
         226 => 'Im Used',
-        // Redirection 3xx
         300 => 'Multiple Choices',
         301 => 'Moved Permanently',
         302 => 'Found',
@@ -56,7 +44,6 @@ class Response extends Message implements ResponseInterface
         306 => 'Reserved',
         307 => 'Temporary Redirect',
         308 => 'Permanent Redirect',
-        // Client Errors 4xx
         400 => 'Bad Request',
         401 => 'Unauthorized',
         402 => 'Payment Required',
@@ -85,7 +72,6 @@ class Response extends Message implements ResponseInterface
         429 => 'Too Many Requests',
         431 => 'Request Header Fields Too Large',
         451 => 'Unavailable For Legal Reasons',
-        // Server Errors 5xx
         500 => 'Internal Server Error',
         501 => 'Not Implemented',
         502 => 'Bad Gateway',
@@ -134,9 +120,6 @@ class Response extends Message implements ResponseInterface
     /**
      * Returns the response status code.
      *
-     * The status code is a 3-digit integer result code of the server's attempt
-     * to understand and satisfy the request.
-     *
      * @return integer
      */
     public function getStatusCode()
@@ -155,12 +138,12 @@ class Response extends Message implements ResponseInterface
      */
     public function withStatus($code, $reason = '')
     {
-        $new = clone $this;
+        $static = clone $this;
 
-        $new->code = $code;
+        $static->code = $code;
 
-        $new->reason = $reason === '' ? $new->codes[$code] : $reason;
+        $static->reason = $reason ?: $static->codes[$code];
 
-        return $new;
+        return $static;
     }
 }

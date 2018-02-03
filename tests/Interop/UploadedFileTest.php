@@ -138,7 +138,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
 
         $type = mime_content_type($file);
 
-        $zapheus = new File($file, $size, UPLOAD_ERR_OK, $name, $type);
+        $zapheus = new File($file, $name, UPLOAD_ERR_OK);
 
         return new UploadedFile($zapheus);
     }
