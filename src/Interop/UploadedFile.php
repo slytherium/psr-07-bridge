@@ -2,6 +2,7 @@
 
 namespace Zapheus\Bridge\Psr\Interop;
 
+use Zapheus\Bridge\Psr\UploadedFile as BaseUploadedFile;
 use Psr\Http\Message\UploadedFileInterface;
 use Zapheus\Http\Message\FileInterface;
 
@@ -11,7 +12,7 @@ use Zapheus\Http\Message\FileInterface;
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class UploadedFile implements UploadedFileInterface
+class UploadedFile extends BaseUploadedFile
 {
     /**
      * @var \Zapheus\Http\Message\FileInterface
@@ -26,46 +27,14 @@ class UploadedFile implements UploadedFileInterface
     public function __construct(FileInterface $file)
     {
         $this->file = $file;
-    }
 
-    /**
-     * Retrieve the filename sent by the client.
-     *
-     * @return string|null
-     */
-    public function getClientFilename()
-    {
-        return $this->file->name();
-    }
+        $this->error = $file->error();
 
-    /**
-     * Retrieve the media type sent by the client.
-     *
-     * @return string|null
-     */
-    public function getClientMediaType()
-    {
-        return $this->file->type();
-    }
+        $this->name = $file->name();
 
-    /**
-     * Retrieve the error associated with the uploaded file.
-     *
-     * @return integer
-     */
-    public function getError()
-    {
-        return $this->file->error();
-    }
+        $this->size = $file->size();
 
-    /**
-     * Retrieve the file size.
-     *
-     * @return integer|null
-     */
-    public function getSize()
-    {
-        return $this->file->size();
+        $this->media = $file->type();
     }
 
     /**

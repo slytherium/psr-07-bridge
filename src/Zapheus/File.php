@@ -4,6 +4,7 @@ namespace Zapheus\Bridge\Psr\Zapheus;
 
 use Psr\Http\Message\UploadedFileInterface;
 use Zapheus\Http\Message\FileInterface;
+use Zapheus\Http\Message\File as BaseFile;
 
 /**
  * PSR-07 to Zapheus Uploaded File Bridge
@@ -11,12 +12,12 @@ use Zapheus\Http\Message\FileInterface;
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class File implements FileInterface
+class File extends BaseFile
 {
     /**
      * @var \Psr\Http\Message\UploadedFileInterface
      */
-    protected $file;
+    protected $psr;
 
     /**
      * Initializes the uploaded file instance.
@@ -25,47 +26,15 @@ class File implements FileInterface
      */
     public function __construct(UploadedFileInterface $file)
     {
-        $this->file = $file;
-    }
+        $this->psr = $file;
 
-    /**
-     * Returns the filename sent by the client.
-     *
-     * @return string|null
-     */
-    public function name()
-    {
-        return $this->file->getClientFilename();
-    }
+        $this->type = $file->getClientMediaType();
 
-    /**
-     * Returns the media type sent by the client.
-     *
-     * @return string|null
-     */
-    public function type()
-    {
-        return $this->file->getClientMediaType();
-    }
+        $this->name = $file->getClientFilename();
 
-    /**
-     * Returns the error associated with the uploaded file.
-     *
-     * @return integer
-     */
-    public function error()
-    {
-        return $this->file->getError();
-    }
+        $this->size = (integer) $file->getSize();
 
-    /**
-     * Returns the file size.
-     *
-     * @return integer|null
-     */
-    public function size()
-    {
-        return $this->file->getSize();
+        $this->error = $file->getError();
     }
 
     /**
@@ -77,7 +46,7 @@ class File implements FileInterface
      */
     public function stream()
     {
-        return new Stream($this->file->getStream());
+        return new Stream($this->psr->getStream());
     }
 
     /**
@@ -90,6 +59,6 @@ class File implements FileInterface
      */
     public function move($target)
     {
-        $this->file->moveTo($target);
+        $this->psr->moveTo($target);
     }
 }

@@ -3,7 +3,7 @@
 namespace Zapheus\Bridge\Psr\Interop;
 
 use Psr\Http\Message\UriInterface as PsrUriInterface;
-use Zapheus\Bridge\Psr\Uri as AbstractUri;
+use Zapheus\Bridge\Psr\Uri as BaseUri;
 use Zapheus\Http\Message\UriInterface;
 
 /**
@@ -12,7 +12,7 @@ use Zapheus\Http\Message\UriInterface;
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class Uri extends AbstractUri implements PsrUriInterface
+class Uri extends BaseUri implements PsrUriInterface
 {
     /**
      * Initializes the URI instance.

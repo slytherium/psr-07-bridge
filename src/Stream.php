@@ -66,7 +66,7 @@ class Stream implements StreamInterface
      */
     public function close()
     {
-        is_null($this->stream) ?: fclose($this->stream);
+        $this->stream === null ?: fclose($this->stream);
 
         $this->detach();
     }
@@ -96,7 +96,7 @@ class Stream implements StreamInterface
      */
     public function eof()
     {
-        return is_null($this->stream) ?: feof($this->stream);
+        return $this->stream === null ?: feof($this->stream);
     }
 
     /**
@@ -108,10 +108,10 @@ class Stream implements StreamInterface
      */
     public function getContents()
     {
-        if (is_null($this->stream) || ! $this->isReadable()) {
+        if ($this->stream === null || ! $this->isReadable()) {
             $message = 'Could not get contents of stream';
 
-            throw new \RuntimeException($message);
+            throw new \RuntimeException((string) $message);
         }
 
         return stream_get_contents($this->stream);
@@ -129,7 +129,7 @@ class Stream implements StreamInterface
 
         $metadata = isset($this->meta[$key]) ? $this->meta[$key] : null;
 
-        return is_null($key) ? $this->meta : $metadata;
+        return $key === null ? (array) $this->meta : $metadata;
     }
 
     /**
@@ -155,7 +155,7 @@ class Stream implements StreamInterface
      */
     public function isReadable()
     {
-        $mode = $this->getMetadata('mode');
+        $mode = (string) $this->getMetadata('mode');
 
         return in_array($mode, $this->readable);
     }
@@ -177,7 +177,7 @@ class Stream implements StreamInterface
      */
     public function isWritable()
     {
-        $mode = $this->getMetadata('mode');
+        $mode = (string) $this->getMetadata('mode');
 
         return in_array($mode, $this->writable);
     }
@@ -247,10 +247,10 @@ class Stream implements StreamInterface
 
         $this->stream && $position = ftell($this->stream);
 
-        if (is_null($this->stream) || $position === false) {
+        if ($this->stream === null || $position === false) {
             $message = 'Could not get position of pointer in stream';
 
-            throw new \RuntimeException($message);
+            throw new \RuntimeException((string) $message);
         }
 
         return $position;
@@ -266,7 +266,7 @@ class Stream implements StreamInterface
      */
     public function write($string)
     {
-        if (! $this->isWritable()) {
+        if ($this->isWritable() === false) {
             $message = 'Stream is not writable';
 
             throw new \RuntimeException($message);

@@ -3,7 +3,7 @@
 namespace Zapheus\Bridge\Psr\Zapheus;
 
 use Psr\Http\Message\UriInterface;
-use Zapheus\Http\Message\Uri as AbstractUri;
+use Zapheus\Http\Message\Uri as BaseUri;
 use Zapheus\Http\Message\UriInterface as ZapheusUriInterface;
 
 /**
@@ -12,7 +12,7 @@ use Zapheus\Http\Message\UriInterface as ZapheusUriInterface;
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
  */
-class Uri extends AbstractUri implements ZapheusUriInterface
+class Uri extends BaseUri implements ZapheusUriInterface
 {
     /**
      * @var \Psr\Http\Message\UriInterface
@@ -26,96 +26,22 @@ class Uri extends AbstractUri implements ZapheusUriInterface
      */
     public function __construct(UriInterface $uri)
     {
-        $this->uri = $uri;
-    }
+        $this->fragment = $uri->getFragment();
 
-    /**
-     * Return the string representation as a URI reference.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string) $this->uri;
-    }
+        $this->query = $uri->getQuery();
 
-    /**
-     * Returns the authority component of the URI.
-     *
-     * @return string
-     */
-    public function authority()
-    {
-        return $this->uri->getAuthority();
-    }
+        $this->authority = $uri->getAuthority();
 
-    /**
-     * Returns the fragment component of the URI.
-     *
-     * @return string
-     */
-    public function fragment()
-    {
-        return $this->uri->getFragment();
-    }
+        $this->host = $uri->getHost();
 
-    /**
-     * Returns the host component of the URI.
-     *
-     * @return string
-     */
-    public function host()
-    {
-        return $this->uri->getHost();
-    }
+        $this->path = $uri->getPath();
 
-    /**
-     * Returns the path component of the URI.
-     *
-     * @return string
-     */
-    public function path()
-    {
-        return $this->uri->getPath();
-    }
+        $this->port = $uri->getPort();
 
-    /**
-     * Returns the port component of the URI.
-     *
-     * @return null|integer
-     */
-    public function port()
-    {
-        return $this->uri->getPort();
-    }
+        $this->scheme = $uri->getScheme();
 
-    /**
-     * Returns the query string of the URI.
-     *
-     * @return string
-     */
-    public function query()
-    {
-        return $this->uri->getQuery();
-    }
+        $this->user = $uri->getUserInfo();
 
-    /**
-     * Returns the scheme component of the URI.
-     *
-     * @return string
-     */
-    public function scheme()
-    {
-        return $this->uri->getScheme();
-    }
-
-    /**
-     * Returns the user information component of the URI.
-     *
-     * @return string
-     */
-    public function user()
-    {
-        return $this->uri->getUserInfo();
+        $this->uri = (string) $uri;
     }
 }

@@ -75,7 +75,7 @@ class ServerRequest extends Request implements ServerRequestInterface
 
         $this->data = $data;
 
-        $this->query = $query;
+        $this->query = (array) $query;
 
         $this->server = $server;
 

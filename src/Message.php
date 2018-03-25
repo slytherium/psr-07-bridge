@@ -145,6 +145,8 @@ class Message implements MessageInterface
      */
     public function withBody(StreamInterface $body)
     {
+        // TODO: Add \InvalidArgumentException
+
         $static = clone $this;
 
         $static->body = $body;
