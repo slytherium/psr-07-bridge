@@ -55,81 +55,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests StreamInterface::eof.
-     *
-     * @return void
-     */
-    public function testEofMethod()
-    {
-        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
-
-        $resource = fopen($file, 'w');
-
-        $stream = new Stream(new ZapheusStream($resource));
-
-        $expected = false;
-
-        $result = $stream->eof();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests StreamInterface::getContents with \RuntimeException.
-     *
-     * @return void
-     */
-    public function testGetContentsMethodWithRuntimeException()
-    {
-        $this->setExpectedException('RuntimeException');
-
-        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
-
-        $resource = fopen($file, 'w');
-
-        $stream = new Stream(new ZapheusStream($resource));
-
-        $stream->getContents();
-    }
-
-    /**
-     * Tests StreamInterface::getMetadata.
-     *
-     * @return void
-     */
-    public function testGetMetadataMethod()
-    {
-        $expected = array('eof' => false);
-
-        $expected['timed_out'] = null;
-        $expected['blocked'] = 1;
-        $expected['wrapper_type'] = 'plainfile';
-        $expected['stream_type'] = 'STDIO';
-        $expected['mode'] = 'r';
-        $expected['unread_bytes'] = 0;
-        $expected['seekable'] = 1;
-        $expected['uri'] = __DIR__ . '/../Fixture/Views/LoremIpsum.php';
-
-        $result = $this->stream->getMetadata();
-
-        $this->assertEquals($expected['uri'], $result['uri']);
-    }
-
-    /**
-     * Tests StreamInterface::getSize.
-     *
-     * @return void
-     */
-    public function testGetSizeMethod()
-    {
-        $expected = 26;
-
-        $result = $this->stream->getSize();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
      * Tests StreamInterface::read.
      *
      * @return void
@@ -146,24 +71,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests StreamInterface::read with \RuntimeException.
-     *
-     * @return void
-     */
-    public function testReadMethodWithRuntimeException()
-    {
-        $this->setExpectedException('RuntimeException');
-
-        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
-
-        $resource = fopen($file, 'w');
-
-        $stream = new Stream(new ZapheusStream($resource));
-
-        $stream->read(4);
-    }
-
-    /**
      * Tests StreamInterface::rewind.
      *
      * @return void
@@ -176,28 +83,6 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $this->stream->rewind();
 
         $result = $this->stream->getContents();
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Tests StreamInterface::seek and StreamInterface::tell.
-     *
-     * @return void
-     */
-    public function testSeekMethodAndTellMethod()
-    {
-        $expected = 2;
-
-        $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
-
-        $resource = fopen($file, 'w');
-
-        $stream = new Stream(new ZapheusStream($resource));
-
-        $stream->seek($expected);
-
-        $result = $stream->tell();
 
         $this->assertEquals($expected, $result);
     }
@@ -240,23 +125,5 @@ class StreamTest extends \PHPUnit_Framework_TestCase
         $stream->detach();
 
         $stream->tell();
-    }
-
-    /**
-     * Tests StreamInterface::write with \RuntimeException.
-     *
-     * @return void
-     */
-    public function testWriteMethodWithRuntimeException()
-    {
-        $this->setExpectedException('RuntimeException');
-
-        $file = __DIR__ . '/../Fixture/Views/LoremIpsum.php';
-
-        $resource = fopen($file, 'r');
-
-        $stream = new Stream(new ZapheusStream($resource));
-
-        $stream->write('Hello world');
     }
 }
