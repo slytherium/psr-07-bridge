@@ -8,11 +8,11 @@ use Zapheus\Http\Message\StreamInterface;
 /**
  * Zapheus to PSR-07 Stream Bridge
  *
- * NOTE: This stream is read-only stream since it cannot
- * return the resource from the stream of Zapheus. The
- * methods that cannot be used are "getMetadata", "getSize",
- * "eof", "seek", and "tell". It can write but directly
- * only to the implemented Zapheus stream.
+ * NOTE: This stream is a read-only stream since it cannot
+ * return the resource from the stream of Zapheus. Thus,
+ * methods such as "getMetadata", "getSize", "eof", "seek",
+ * and "tell" will not be utilized in this class. It can
+ * write but only using the implemented Zapheus stream.
  *
  * @package Zapheus
  * @author  Rougin Royce Gutib <rougingutib@gmail.com>
