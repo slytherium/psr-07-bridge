@@ -20,32 +20,34 @@ class ServerRequest extends PsrServerRequest
      */
     public function __construct(RequestInterface $request)
     {
-        $server = $request->server();
+        $server = (array) $request->server();
 
         $cookies = $request->cookies();
 
-        list($queries, $files) = $this->globals($request);
+        parent::__construct($server, $cookies, $request->queries());
 
-        $data = $request->data();
+        $this->headers = $request->headers();
 
-        $attributes = $request->attributes();
+        $this->version = $request->version();
 
-        list($uri, $body) = $this->request($request);
+        $this->data = $request->data();
 
-        $headers = $request->headers();
+        $this->attributes = $request->attributes();
 
-        $version = $request->version();
+        $this->uri = new Uri($request->uri());
 
-        parent::__construct($server, $cookies, $queries, $files, $data, $attributes, $uri, $body, $headers, $version);
+        $this->body = new Stream($request->stream());
+
+        $this->uploaded = $this->uploaded($request);
     }
 
     /**
      * Returns an array of global variables.
      *
      * @param  \Zapheus\Http\Message\RequestInterface $request
-     * @return array
+     * @return \Psr\Http\Message\UploadedFileInterface[]
      */
-    protected function globals(RequestInterface $request)
+    protected function uploaded(RequestInterface $request)
     {
         list($items, $uploaded) = array($request->files(), array());
 
@@ -59,21 +61,6 @@ class ServerRequest extends PsrServerRequest
             }
         }
    
-        return array($request->queries(), $uploaded);
-    }
-
-    /**
-     * Returns an array of request variables.
-     *
-     * @param  \Zapheus\Http\Message\RequestInterface $request
-     * @return array
-     */
-    protected function request(RequestInterface $request)
-    {
-        $uri = new Uri($request->uri());
-
-        $stream = new Stream($request->stream());
-
-        return array($uri, $stream);
+        return (array) $uploaded;
     }
 }
