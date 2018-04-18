@@ -30,6 +30,8 @@ class Request extends ZapheusRequest
 
         $this->set('attributes', $request->getAttributes());
 
+        $this->set('queries', $request->getQueryParams());
+
         $this->set('headers', (array) $request->getHeaders());
 
         $this->set('uri', new Uri($request->getUri()));
