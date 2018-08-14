@@ -20,11 +20,6 @@ class Uri extends BaseUri implements ZapheusUriInterface
     protected $authority;
 
     /**
-     * @var \Psr\Http\Message\UriInterface
-     */
-    protected $uri;
-
-    /**
      * Initializes the URI instance.
      *
      * @param \Psr\Http\Message\UriInterface $uri
