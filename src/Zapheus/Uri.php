@@ -15,6 +15,11 @@ use Zapheus\Http\Message\UriInterface as ZapheusUriInterface;
 class Uri extends BaseUri implements ZapheusUriInterface
 {
     /**
+     * @var string
+     */
+    protected $authority;
+
+    /**
      * @var \Psr\Http\Message\UriInterface
      */
     protected $uri;
@@ -42,6 +47,6 @@ class Uri extends BaseUri implements ZapheusUriInterface
 
         $this->user = $uri->getUserInfo();
 
-        $this->uri = (string) $uri;
+        $this->uri = $uri->__toString();
     }
 }
