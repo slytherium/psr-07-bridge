@@ -9,7 +9,7 @@ use Zapheus\Http\Message\ResponseInterface;
  * Zapheus to PSR-07 Response Bridge
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Response extends PsrResponse
 {
