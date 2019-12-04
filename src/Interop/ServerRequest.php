@@ -9,7 +9,7 @@ use Zapheus\Http\Message\RequestInterface;
  * Zapheus to PSR-07 Server Request Bridge
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class ServerRequest extends PsrServerRequest
 {
@@ -51,13 +51,13 @@ class ServerRequest extends PsrServerRequest
     {
         list($items, $uploaded) = array($request->files(), array());
 
-        foreach ((array) $items as $key => $files) {
-            $uploaded[(string) $key] = array();
+        foreach ($items as $key => $files)
+        {
+            $uploaded[$key] = array();
 
-            foreach ((array) $files as $file) {
-                $item = new UploadedFile($file);
-                
-                array_push($uploaded[$key], $item);
+            foreach ($files as $file)
+            {
+                array_push($uploaded[$key], new UploadedFile($file));
             }
         }
    
