@@ -15,7 +15,7 @@ use Zapheus\Http\Message\StreamInterface;
  * write but only using the implemented Zapheus stream.
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Stream extends BaseStream
 {
