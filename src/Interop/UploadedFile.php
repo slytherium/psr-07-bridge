@@ -10,7 +10,7 @@ use Zapheus\Http\Message\FileInterface;
  * Zapheus to PSR-07 Uploaded File Bridge
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class UploadedFile extends BaseUploadedFile
 {
