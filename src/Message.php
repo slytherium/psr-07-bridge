@@ -9,7 +9,7 @@ use Psr\Http\Message\StreamInterface;
  * Message
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Message implements MessageInterface
 {
@@ -37,7 +37,8 @@ class Message implements MessageInterface
      */
     public function __construct(StreamInterface $body = null, array $headers = array(), $version = '1.1')
     {
-        if ($body === null) {
+        if ($body === null)
+        {
             $resource = fopen('php://temp', 'r+');
 
             $resource = $resource === false ? null : $resource;
@@ -199,7 +200,8 @@ class Message implements MessageInterface
     {
         $instance = clone $this;
 
-        if ($this->hasHeader($name)) {
+        if ($this->hasHeader($name))
+        {
             $static = clone $this;
 
             unset($static->headers[$name]);
