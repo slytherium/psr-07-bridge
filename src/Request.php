@@ -10,7 +10,7 @@ use Psr\Http\Message\UriInterface;
  * Request
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Request extends Message implements RequestInterface
 {
@@ -127,7 +127,8 @@ class Request extends Message implements RequestInterface
 
         $static->uri = $uri;
 
-        if (! $preserve && $host = $uri->getHost()) {
+        if (! $preserve && $host = $uri->getHost())
+        {
             $port = $host . ':' . $uri->getPort();
 
             $host = $uri->getPort() ? $port : $host;
