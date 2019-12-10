@@ -9,7 +9,7 @@ use Psr\Http\Message\StreamInterface;
  * Response
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Response extends Message implements ResponseInterface
 {
