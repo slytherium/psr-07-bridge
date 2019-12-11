@@ -11,7 +11,7 @@ use Psr\Http\Message\UriInterface;
  * Server Request
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class ServerRequest extends Request implements ServerRequestInterface
 {
