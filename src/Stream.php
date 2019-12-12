@@ -8,7 +8,7 @@ use Psr\Http\Message\StreamInterface;
  * Stream
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Stream implements StreamInterface
 {
@@ -108,7 +108,8 @@ class Stream implements StreamInterface
      */
     public function getContents()
     {
-        if ($this->stream === null || ! $this->isReadable()) {
+        if ($this->stream === null || ! $this->isReadable())
+        {
             $message = 'Could not get contents of stream';
 
             throw new \RuntimeException((string) $message);
@@ -139,7 +140,8 @@ class Stream implements StreamInterface
      */
     public function getSize()
     {
-        if (is_null($this->size) === true) {
+        if (is_null($this->size) === true)
+        {
             $stats = fstat($this->stream);
 
             $this->size = $stats['size'];
@@ -194,7 +196,8 @@ class Stream implements StreamInterface
     {
         $data = fread($this->stream, $length);
 
-        if (! $this->isReadable() || $data === false) {
+        if (! $this->isReadable() || $data === false)
+        {
             $message = 'Could not read from stream';
 
             throw new \RuntimeException($message);
@@ -227,7 +230,8 @@ class Stream implements StreamInterface
 
         $this->stream && $seek = fseek($this->stream, $offset, $whence);
 
-        if (! $this->isSeekable() || $seek === -1) {
+        if (! $this->isSeekable() || $seek === -1)
+        {
             $message = 'Could not seek in stream';
 
             throw new \RuntimeException($message);
@@ -247,7 +251,8 @@ class Stream implements StreamInterface
 
         $this->stream && $position = ftell($this->stream);
 
-        if ($this->stream === null || $position === false) {
+        if ($this->stream === null || $position === false)
+        {
             $message = 'Could not get position of pointer in stream';
 
             throw new \RuntimeException((string) $message);
@@ -266,7 +271,8 @@ class Stream implements StreamInterface
      */
     public function write($string)
     {
-        if ($this->isWritable() === false) {
+        if ($this->isWritable() === false)
+        {
             $message = 'Stream is not writable';
 
             throw new \RuntimeException($message);
