@@ -8,7 +8,7 @@ use Psr\Http\Message\UploadedFileInterface;
  * Uploaded File
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class UploadedFile implements UploadedFileInterface
 {
@@ -142,11 +142,14 @@ class UploadedFile implements UploadedFileInterface
      */
     public static function normalize(array $uploaded, $files = array())
     {
-        foreach (self::diverse($uploaded) as $name => $file) {
+        foreach (self::diverse($uploaded) as $name => $file)
+        {
             list($files[$name], $items) = array($file, array());
 
-            if (isset($file['name']) === true) {
-                foreach ($file['name'] as $key => $value) {
+            if (isset($file['name']) === true)
+            {
+                foreach ($file['name'] as $key => $value)
+                {
                     $instance = self::create($file, $key);
 
                     array_push($items, $instance);
@@ -191,8 +194,10 @@ class UploadedFile implements UploadedFileInterface
     {
         $result = array();
 
-        foreach ($uploaded as $file => $item) {
-            foreach ($item as $key => $value) {
+        foreach ($uploaded as $file => $item)
+        {
+            foreach ($item as $key => $value)
+            {
                 $diversed = (array) $value;
 
                 $result[$file][$key] = $diversed;
