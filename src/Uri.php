@@ -8,7 +8,7 @@ use Psr\Http\Message\UriInterface;
  * URI
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Uri implements UriInterface
 {
