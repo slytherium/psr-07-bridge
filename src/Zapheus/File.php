@@ -10,7 +10,7 @@ use Zapheus\Http\Message\File as BaseFile;
  * PSR-07 to Zapheus Uploaded File Bridge
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class File extends BaseFile
 {
