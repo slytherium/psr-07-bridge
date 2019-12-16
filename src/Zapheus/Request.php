@@ -9,7 +9,7 @@ use Zapheus\Http\Message\Request as ZapheusRequest;
  * PSR-07 to Zapheus Server Request Bridge
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Request extends ZapheusRequest
 {
@@ -20,25 +20,25 @@ class Request extends ZapheusRequest
      */
     public function __construct(ServerRequestInterface $request)
     {
-        $data = (array) $request->getParsedBody();
+        $this->data = $request->getParsedBody();
 
-        $cookies = $request->getCookieParams();
+        $this->cookies = $request->getCookieParams();
 
-        parent::__construct($request->getServerParams(), $cookies, $data);
+        $this->server = $request->getServerParams();
 
-        $this->set('files', $this->uploaded($request));
+        $this->files = $this->uploaded($request);
 
-        $this->set('attributes', $request->getAttributes());
+        $this->attributes = $request->getAttributes();
 
-        $this->set('queries', $request->getQueryParams());
+        $this->queries = $request->getQueryParams();
 
-        $this->set('headers', (array) $request->getHeaders());
+        $this->headers = (array) $request->getHeaders();
 
-        $this->set('uri', new Uri($request->getUri()));
+        $this->uri = new Uri($request->getUri());
 
-        $this->set('stream', new Stream($request->getBody()));
+        $this->stream = new Stream($request->getBody());
 
-        $this->set('version', $request->getProtocolVersion());
+        $this->version = $request->getProtocolVersion();
     }
 
     /**
@@ -53,13 +53,13 @@ class Request extends ZapheusRequest
 
         $items = $request->getUploadedFiles();
 
-        foreach ((array) $items as $key => $files) {
+        foreach ((array) $items as $key => $files)
+        {
             $uploaded[$key] = array();
 
-            foreach ((array) $files as $file) {
-                $item = new File($file);
-
-                array_push($uploaded[$key], $item);
+            foreach ((array) $files as $file)
+            {
+                array_push($uploaded[$key], new File($file));
             }
         }
 
