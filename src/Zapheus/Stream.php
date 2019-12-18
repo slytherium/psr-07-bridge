@@ -9,7 +9,7 @@ use Zapheus\Http\Message\StreamInterface;
  * PSR-07 to Zapheus Stream Bridge
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Stream implements StreamInterface
 {
