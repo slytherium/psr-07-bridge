@@ -10,7 +10,7 @@ use Zapheus\Http\Message\UriInterface as ZapheusUriInterface;
  * PSR-07 to Zapheus URI Bridge
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class Uri extends BaseUri implements ZapheusUriInterface
 {
