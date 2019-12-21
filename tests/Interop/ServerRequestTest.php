@@ -4,14 +4,15 @@ namespace Zapheus\Bridge\Psr\Interop;
 
 use Zapheus\Bridge\Psr\UploadedFile;
 use Zapheus\Bridge\Psr\Uri;
-use Zapheus\Http\Message\Request as ZapheusRequest;
+use Zapheus\Http\Message\FileFactory;
+use Zapheus\Http\Message\RequestFactory;
 use Zapheus\Http\Message\Stream as ZapheusStream;
 
 /**
  * Server Request Test
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class ServerRequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -50,7 +51,15 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
         $_FILES['file']['tmp_name'] = array($file);
         $_FILES['file']['type'] = array(mime_content_type($file));
 
-        $request = new ZapheusRequest($_SERVER, array(), array(), $_FILES);
+        $factory = new FileFactory;
+
+        $files = $factory->normalize($_FILES);
+
+        $factory = new RequestFactory;
+
+        $factory->server($_SERVER);
+
+        $request = $factory->files($files)->make();
 
         $this->server = $request->server();
 
@@ -138,11 +147,11 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests ServerRequestInterface::getStatusCode.
+     * Tests ServerRequestInterface::getServerParams.
      *
      * @return void
      */
-    public function testGetStatusCodeMethod()
+    public function testGetServerParamsMethod()
     {
         $expected = $this->server;
 
