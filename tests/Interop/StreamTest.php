@@ -8,7 +8,7 @@ use Zapheus\Http\Message\Stream as ZapheusStream;
  * Stream Test
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class StreamTest extends \PHPUnit_Framework_TestCase
 {
