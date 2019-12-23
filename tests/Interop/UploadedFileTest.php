@@ -8,7 +8,7 @@ use Zapheus\Http\Message\File;
  * Uploaded File Test
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class UploadedFileTest extends \PHPUnit_Framework_TestCase
 {
@@ -83,7 +83,7 @@ class UploadedFileTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSizeMethod()
     {
-        $expected = filesize($this->file);
+        $expected = (integer) filesize($this->file);
 
         $result = $this->uploaded->getSize();
 
