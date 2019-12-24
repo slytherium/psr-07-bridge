@@ -8,7 +8,7 @@ use Zapheus\Http\Message\Uri as ZapheusUri;
  * Uri Test
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class UriTest extends \PHPUnit_Framework_TestCase
 {
