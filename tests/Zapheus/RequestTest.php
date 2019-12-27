@@ -5,25 +5,26 @@ namespace Zapheus\Bridge\Psr\Zapheus;
 use Zapheus\Bridge\Psr\ServerRequest;
 use Zapheus\Bridge\Psr\Stream as PsrStream;
 use Zapheus\Http\Message\File;
+use Zapheus\Http\Message\RequestFactory;
 use Zapheus\Http\Message\Uri;
 
 /**
  * Request Test
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var \Zapheus\Http\Message\RequestFactory
+     */
+    protected $factory;
+
+    /**
      * @var array
      */
     protected $files = array('file' => array());
-
-    /**
-     * @var \Zapheus\Http\Message\ServerRequestInterface
-     */
-    protected $request;
 
     /**
      * @var array
@@ -54,7 +55,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->server = $request->getServerParams();
 
-        $this->request = new Request($request);
+        $request = new Request($request);
+
+        $this->factory = new RequestFactory($request);
     }
 
     /**
@@ -66,9 +69,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array('name' => 'Rougin Royce');
 
-        $request = $this->request->with('attributes', $expected);
+        $factory = $this->factory->attributes($expected);
 
-        $result = $request->attributes();
+        $result = $factory->make()->attributes();
 
         $this->assertEquals($expected, $result);
     }
@@ -82,9 +85,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array('name' => 'Rougin', 'address' => 'Tomorrowland');
 
-        $request = $this->request->with('cookies', $expected);
+        $factory = $this->factory->cookies($expected);
 
-        $result = $request->cookies();
+        $result = $factory->make()->cookies();
 
         $this->assertEquals($expected, $result);
     }
@@ -98,9 +101,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array('name' => 'Rougin Royce', 'age' => 20);
 
-        $request = $this->request->with('data', $expected);
+        $factory = $this->factory->data($expected);
 
-        $result = $request->data();
+        $result = $factory->make()->data();
 
         $this->assertEquals($expected, $result);
     }
@@ -118,9 +121,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $expected = array($file);
 
-        $request = $this->request->with('files', $expected);
+        $factory = $this->factory->files($expected);
 
-        $result = $request->files();
+        $result = $factory->make()->files();
 
         $this->assertEquals($expected, $result);
     }
@@ -134,9 +137,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 'POST';
 
-        $request = $this->request->with('method', $expected);
+        $factory = $this->factory->method($expected);
 
-        $result = $request->method();
+        $result = $factory->make()->method();
 
         $this->assertEquals($expected, $result);
     }
@@ -150,9 +153,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array('name' => 'Rougin Royce', 'age' => 20);
 
-        $request = $this->request->with('queries', $expected);
+        $factory = $this->factory->queries($expected);
 
-        $result = $request->queries();
+        $result = $factory->make()->queries();
 
         $this->assertEquals($expected, $result);
     }
@@ -164,9 +167,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testServerMethod()
     {
-        $result = $this->request->server();
+        $result = $this->factory->make()->server();
 
-        $expected = $_SERVER;
+        $expected = (array) $this->server;
 
         $this->assertEquals($expected, $result);
     }
@@ -180,9 +183,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 'origin-form';
 
-        $request = $this->request->with('target', $expected);
+        $factory = $this->factory->target($expected);
 
-        $result = $request->target();
+        $result = $factory->make()->target();
 
         $this->assertEquals($expected, $result);
     }
@@ -196,9 +199,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $expected = new Uri('https://rougin.github.io');
 
-        $request = $this->request->with('uri', $expected);
+        $factory = $this->factory->uri($expected);
 
-        $result = $request->uri();
+        $result = $factory->make()->uri();
 
         $this->assertEquals($expected, $result);
     }
