@@ -3,19 +3,20 @@
 namespace Zapheus\Bridge\Psr\Zapheus;
 
 use Zapheus\Bridge\Psr\Response as PsrResponse;
+use Zapheus\Http\Message\ResponseFactory;
 
 /**
  * Response Test
  *
  * @package Zapheus
- * @author  Rougin Royce Gutib <rougingutib@gmail.com>
+ * @author  Rougin Gutib <rougingutib@gmail.com>
  */
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Zapheus\Http\Message\ResponseInterface
+     * @var \Zapheus\Http\Message\ResponseFactory
      */
-    protected $response;
+    protected $factory;
 
     /**
      * Sets up the response instance.
@@ -24,9 +25,9 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $response = new PsrResponse;
+        $response = new Response($psr = new PsrResponse);
 
-        $this->response = new Response($response);
+        $this->factory = new ResponseFactory($response);
     }
 
     /**
@@ -38,9 +39,9 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 404;
 
-        $response = $this->response->with('code', $expected);
+        $factory = $this->factory->code($expected);
 
-        $result = $response->code();
+        $result = $factory->make()->code();
 
         $this->assertEquals($expected, $result);
     }
@@ -54,9 +55,9 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     {
         $expected = 'Proxy Authentication Required';
 
-        $response = $this->response->with('code', 407);
+        $factory = $this->factory->code(407);
 
-        $result = $response->reason();
+        $result = $factory->make()->reason();
 
         $this->assertEquals($expected, $result);
     }
