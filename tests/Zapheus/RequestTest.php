@@ -40,7 +40,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/';
-        $_SERVER['SERVER_NAME'] = 'rougin.github.io';
+        $_SERVER['SERVER_NAME'] = 'roug.in';
         $_SERVER['SERVER_PORT'] = 8000;
 
         $file = __DIR__ . '/../Fixture/Views/HelloWorld.php';
@@ -197,7 +197,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testUriMethod()
     {
-        $expected = new Uri('https://rougin.github.io');
+        $expected = new Uri('https://roug.in');
 
         $factory = $this->factory->uri($expected);
 
