@@ -29,7 +29,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $url = 'https://me@rougin.github.io:400/about#test';
+        $url = 'https://me@roug.in:400/about#test';
 
         $psr = new PsrUri($url);
 
@@ -43,7 +43,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function testToStringMagicMethod()
     {
-        $expected = 'https://me@rougin.github.io:400/about#test';
+        $expected = 'https://me@roug.in:400/about#test';
 
         $this->assertEquals($expected, (string) $this->uri);
     }
@@ -55,7 +55,7 @@ class UriTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetAuthorityMethod()
     {
-        $expected = 'me@rougin.github.io:400';
+        $expected = 'me@roug.in:400';
 
         $result = $this->uri->authority();
 
