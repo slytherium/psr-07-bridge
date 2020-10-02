@@ -166,7 +166,7 @@ class StreamTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException');
 
-        $stream = new Stream(fopen($this->filepath, 'w'));
+        $stream = new Stream(fopen($this->filepath, 'r+'));
 
         $stream->read(55);
     }
